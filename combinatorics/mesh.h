@@ -52,6 +52,8 @@
 #include <vector>
 #include <iostream>
 
+#include "openvdb_includes.h"
+
 namespace Geex {
 
     typedef unsigned int TopoFlags ;
@@ -400,9 +402,17 @@ namespace Geex {
 
         // Returns the number of borders.
         unsigned int load(const std::string& filename) ;
-
+        
+        /// lukas gartmair 17.8.16 
+        /// function in order not to load the files but just to pass the points and faces
+        unsigned int receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads);
+       
         // Note: does not save adjacencies, just geometry.
         void save(const std::string& filename) ;
+        
+        /// lukas gartmair 17.8.16 
+        /// function in order not to load the files but just to pass the points and faces
+        void deliverVertsAndFaces(std::vector<openvdb::Vec3s> rdt_vertices, std::vector<openvdb::Vec3I> rdt_faces);
 
         //==----------------------- Clipping
 

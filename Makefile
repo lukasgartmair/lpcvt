@@ -1,7 +1,7 @@
 CXX=g++
-COPT=-I../ -frounding-math -O3 -DCVT_MULTITHREAD 
+COPT=-I../ -frounding-math -I/usr/include/openvdb -O3 -DCVT_MULTITHREAD 
 OBJS=processor.o delaunay_CGAL.o delaunay.o mesh.o RVD_predicates.o F_Lp.o main.o
-LIBS=-lCGAL 
+LIBS=-lCGAL -lopenvdb
 LDXX=g++
 
 LpCVT: $(OBJS)

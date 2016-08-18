@@ -7,7 +7,7 @@
 #include "algebra/F_Lp.h"
 #include "common/line_stream.h"
 #include <fstream>
-
+#include <openvdb/openvdb.h>
 //===================================================================================================
 //
 // Geometry and combinatorics tests
@@ -59,6 +59,19 @@ namespace Geex {
             }
         }
     }
+    
+    // Just pass the mesh vertices to instead a point cloud?
+    
+    void create_pts(std::vector<openvdb::Vec3s> points, std::vector<vec3>& pts)
+    {
+    	pts.clear() ;
+    	for (i=0, i<points.size(),i++)
+    	{
+    		vec3 p = {points[i].x(), points[i].y(), points[i].z()};
+        	pts.push_back(p) ;
+    	}
+    }
+    
 
 
     //==================================================================================
@@ -75,10 +88,26 @@ namespace Geex {
         void operator()(unsigned int i, unsigned int j, unsigned int k) const {
             (*out_) << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
         }
-
+        
     private:
         std::ofstream* out_ ;
     } ;
+
+	// no saving just writing to the vector 
+	// lukas gartmair 18.8.16
+    class WritePrimalTriangle {
+    public:
+        WritePrimalTriangle(std::vector<openvdb::Vec3I> rdt_faces) { 
+        }
+        
+        unsigned int i;
+        unsigned int j;
+        unsigned int k;
+        rdt_faces[]
+            (*out_) << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
+
+    } ;
+    
 
     /**
      * Given a Restricted Voronoi Diagram, saves the Restricted Delaunay
@@ -96,22 +125,32 @@ namespace Geex {
         out.close();
         std::cerr << "Done." << std::endl ;
     }
+    
+    void RVDDeliverVertsAndFaces(RestrictedVoronoiDiagram& RVD, std::vector<openvdb::Vec3s> rdt_vertices, std::vector<openvdb::Vec3I> rdt_faces)
+    {
+    for(unsigned int i=0; i<RVD.delaunay()->nb_vertices(); i++) 
+    	{
+            rdt_vertices[i] = RVD.delaunay()->vertex(i);
+        }
+        
+        RVD.for_each_primal_triangle(WritePrimalTriangle(std::vector<openvdb::Vec3I> rdt_faces)) ;
+    
+    }
 
     //==================================================================================
 
-    void test_combinatorics(const std::string& mesh_filename, const std::string& pts_filename) {
+    void test_combinatorics() {
         Mesh M ;
-        unsigned int nb_borders = M.load(mesh_filename) ;
+        unsigned int nb_borders = M.receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads) ;
         std::vector<vec3> pts ;
-        load_pts(pts_filename, pts) ;
+        create_pts(points, pts) ;
         Delaunay* delaunay = Delaunay::create("CGAL") ;
         RestrictedVoronoiDiagram RVD(delaunay, &M) ;
 
         delaunay->set_vertices(pts) ;
-        save_RDT(RVD, "rdt.obj") ;
+        RVDDeliverVertsAndFaces(RestrictedVoronoiDiagram& RVD, std::vector<openvdb::Vec3s> rdt_vertices, std::vector<openvdb::Vec3I> rdt_faces)
         delete delaunay ;
     }
-
 }
 
 //===================================================================================================
@@ -244,11 +283,25 @@ namespace Geex {
 }
 
 int main(int argc, char** argv) {
-    if(argc != 3) {
-        std::cerr << "usage  : " << argv[0] << " mesh_filename pts_filename" << std::endl ;
-        std::cerr << "example: " << argv[0] << " data/three_holes.obj data/three_holes.pts" << std::endl ;
-        return -1 ;
-    }
+
+// Create a VDB file object.
+openvdb::io::File file("~/Downloads/bunny.vdb");
+// Open the file.  This reads the file header, but not any grids.
+file.open();
+openvdb::GridBase::Ptr baseGrid;
+baseGrid = file.readGrid("ls_bunny");
+file.close();
+openvdb::FloatGrid::Ptr grid = openvdb::gridPtrCast<openvdb::FloatGrid>(baseGrid);
+
+    double isovalue = 0.1;
+    double adaptivity = 0;
+
+  std::vector<openvdb::Vec3s> points;
+  std::vector<openvdb::Vec3I> triangles;
+  std::vector<openvdb::Vec4I> quads;
+    // change the grid here to be extracted
+  openvdb::tools::volumeToMesh<openvdb::FloatGrid>(grid, points, triangles, quads, isovalue, adaptivity);
+
     std::cerr << "============= geometry->combinatorics test ==========" << std::endl ;
     Geex::test_combinatorics(argv[1], argv[2]) ;
     std::cerr << "============= combinatorics->algebra test  ==========" << std::endl ;
@@ -256,3 +309,38 @@ int main(int argc, char** argv) {
     Geex::test_algebra(argv[1], argv[2]) ;
     return 0 ;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
