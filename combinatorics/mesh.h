@@ -47,12 +47,10 @@
 #ifndef __GEEX_CVT_TOPO_POLY_MESH__
 #define __GEEX_CVT_TOPO_POLY_MESH__
 
-#include <LpCVT/common/types.h>
-#include <LpCVT/combinatorics/symbolic_vertex.h>
+#include "../common/types.h"
+#include "symbolic_vertex.h"
 #include <vector>
 #include <iostream>
-
-#include "openvdb_includes.h"
 
 namespace Geex {
 
@@ -405,14 +403,14 @@ namespace Geex {
         
         /// lukas gartmair 17.8.16 
         /// function in order not to load the files but just to pass the points and faces
-        unsigned int receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads);
+        //unsigned int receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads);
        
         // Note: does not save adjacencies, just geometry.
         void save(const std::string& filename) ;
         
         /// lukas gartmair 17.8.16 
         /// function in order not to load the files but just to pass the points and faces
-        void deliverVertsAndFaces(std::vector<openvdb::Vec3s> rdt_vertices, std::vector<openvdb::Vec3I> rdt_faces);
+        //void deliverVertsAndFaces(std::vector<openvdb::Vec3s> rdt_vertices, std::vector<openvdb::Vec3I> rdt_faces);
 
         //==----------------------- Clipping
 

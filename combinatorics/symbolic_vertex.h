@@ -46,8 +46,8 @@
 #ifndef __GEEX_CVT_SYMBOLIC_VERTEX__
 #define __GEEX_CVT_SYMBOLIC_VERTEX__
 
-#include <LpCVT/common/types.h>
-#include <LpCVT/common/containers.h>
+#include "../common/types.h"
+#include "../common/containers.h"
 
 namespace Geex {
 

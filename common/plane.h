@@ -46,7 +46,7 @@
 #ifndef __GEEX_MATHEMATICS_PLANE__
 #define __GEEX_MATHEMATICS_PLANE__
 
-#include <LpCVT/common/vecg.h>
+#include "vecg.h"
 
 namespace Geex {
 

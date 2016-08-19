@@ -7,7 +7,6 @@
 #include "algebra/F_Lp.h"
 #include "common/line_stream.h"
 #include <fstream>
-#include <openvdb/openvdb.h>
 //===================================================================================================
 //
 // Geometry and combinatorics tests
@@ -283,24 +282,6 @@ namespace Geex {
 }
 
 int main(int argc, char** argv) {
-
-// Create a VDB file object.
-openvdb::io::File file("~/Downloads/bunny.vdb");
-// Open the file.  This reads the file header, but not any grids.
-file.open();
-openvdb::GridBase::Ptr baseGrid;
-baseGrid = file.readGrid("ls_bunny");
-file.close();
-openvdb::FloatGrid::Ptr grid = openvdb::gridPtrCast<openvdb::FloatGrid>(baseGrid);
-
-    double isovalue = 0.1;
-    double adaptivity = 0;
-
-  std::vector<openvdb::Vec3s> points;
-  std::vector<openvdb::Vec3I> triangles;
-  std::vector<openvdb::Vec4I> quads;
-    // change the grid here to be extracted
-  openvdb::tools::volumeToMesh<openvdb::FloatGrid>(grid, points, triangles, quads, isovalue, adaptivity);
 
     std::cerr << "============= geometry->combinatorics test ==========" << std::endl ;
     Geex::test_combinatorics(argv[1], argv[2]) ;

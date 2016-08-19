@@ -43,8 +43,8 @@
  *
  */
 
-#include <LpCVT/combinatorics/mesh.h>
-#include <LpCVT/common/line_stream.h>
+#include "mesh.h"
+#include "../common/line_stream.h"
 #include <map>
 #include <fstream>
 
@@ -75,7 +75,7 @@ namespace Geex {
     
     /////// these are my own interface functions to receive and deliver openvdb vectors for points and faces
     /////// lukas gartmair 17.08.2016
-    
+    /*
     unsigned int Mesh::receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads)
     {
     	
@@ -249,7 +249,7 @@ namespace Geex {
     
     
     }
-
+*/
     unsigned int Mesh::load(const std::string& filename) {
         std::cerr << "Mesh: Loading " << filename << std::endl ;
         std::ifstream input(filename.c_str()) ;
