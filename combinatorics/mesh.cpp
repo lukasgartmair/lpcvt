@@ -75,18 +75,22 @@ namespace Geex {
     
     /////// these are my own interface functions to receive and deliver openvdb vectors for points and faces
     /////// lukas gartmair 17.08.2016
-    /*
-    unsigned int Mesh::receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads)
+
+    int Mesh::receiveVertices(std::vector<std::vector<float> > points)
     {
     	
 	std::vector<vec3> vertex ;
 	std::vector< std::vector<unsigned int> > star ;
+	
+	// Step 1: load vertices and triangles
+        // (and keep track of stars, i.e. lists
+        //  of triangles incident to each vertex).
 
 	for( int i = 0; i < points.size(); i++)
 	{
-		double x = (double) points[i].x();
-		double y = (double) points[i].y();
-		double z = (double) points[i].z();
+		double x = (double) points[i][0];
+		double y = (double) points[i][1];
+		double z = (double) points[i][2];
 		vec3 p;
 		p[0] = x;
 		p[1] = y;
@@ -94,15 +98,33 @@ namespace Geex {
 		vertex.push_back(p) ;
 		star.push_back( std::vector<unsigned int>() ) ;
 	}
+	
+	return vertex.size();
+
+    }
+    
+   void Mesh::receiveTriangles(std::vector<std::vector<float> > triangles)
+   
+   { 	
+   
+   	std::vector<vec3> vertex ;
+	std::vector< std::vector<unsigned int> > star ; 
 
 	for(int i=0;i<triangles.size();i++) 
 	{
 		
+		int dimension = 3;
+		std::vector<int> cur_facet(dimension);
+
+		cur_facet[0] = triangles[i][0]-1;
+		cur_facet[1] = triangles[i][1]-1;
+		cur_facet[2] = triangles[i][2]-1;
+		
+		std::cout << cur_facet[0] << " "  << " " << cur_facet[1]<< " " << cur_facet[2] << std::endl; 
+	}
+	}
 	
-		std::vector<int> cur_facet;
-		cur_facet[0] = triangles[i][1]+1;
-		cur_facet[1] = triangles[i][2]+1;
-		cur_facet[2] = triangles[i][3]+1;
+	/*
 		
 		unsigned int f = nb_facets() ;
 		
@@ -118,18 +140,20 @@ namespace Geex {
 		
 		end_facet() ;
 		
-		                    unsigned int ft = nb_facets() ;
-                    begin_facet() ;
-                    for(unsigned int i=0; i<cur_facet.size(); i++) {
-                        unsigned int v = cur_facet[i] ;
-                        add_vertex(VertexEdge(vertex[v])) ;
-                        top_vertex().set_flag(VertexEdge::ORIGINAL) ;
-                        vertex_index_.push_back(v) ;
-                        star[v].push_back(ft) ;
-                    }
-                    end_facet() ;
-	}
+		unsigned int ft = nb_facets() ;
+		begin_facet() ;
+		for(unsigned int i=0; i<cur_facet.size(); i++) 
+		{
+			unsigned int v = cur_facet[i] ;
+			add_vertex(VertexEdge(vertex[v])) ;
+			top_vertex().set_flag(VertexEdge::ORIGINAL) ;
+			vertex_index_.push_back(v) ;
+			star[v].push_back(ft) ;
+		}
+		end_facet() ; 
+	} */
 
+/*
 	for(int i=0;i<quads.size();i++) 
 	{
 		std::vector<int> cur_facet;
@@ -165,91 +189,11 @@ namespace Geex {
                     }
                     end_facet() ;
 	}
-
-
-
-    
-        original_vertices_.resize(vertex.size());
-        std::copy(vertex.begin(), vertex.end(), original_vertices_.begin());
-        
-        // Step 2: compute facet adjacencies
-        for(unsigned int f=0; f<nb_facets(); f++) {
-            unsigned int facet_base = facet_begin(f) ;
-            unsigned int facet_n = facet_size(f) ;
-
-            for(unsigned int i=0; i<facet_n; i++) {
-                unsigned int v1 = facet_base + i ;
-                unsigned int v2 = facet_base + ((i + 1) % facet_n) ;
-                unsigned int gv1 = vertex_index_[v1] ;
-                unsigned int gv2 = vertex_index_[v2] ;
-                const std::vector<unsigned int>& S = star[gv1] ;
-                for(unsigned int k=0; k<S.size(); k++) {
-                    unsigned int g = S[k] ;
-                    if(
-                        g != f && has_edge(
-                            vertex_index_, 
-                            facet_begin(g), facet_end(g), gv2, gv1
-                        )
-                    ) {
-                        this->vertex(v1).f = g ;
-                        break ;
-                    }
-                }
-            }
-        }
-
-        // Step 3: assign facet ids
-        for(unsigned int f=0; f<nb_facets(); f++) {
-            facet_info(f).id = f ;
-        }
-
-        // Step 4: initialize symbolic information
-        init_symbolic_vertices() ;
-
-        // Just for checking
-        unsigned int nb_borders = 0 ;
-        for(unsigned int i=0; i<nb_vertices(); i++) {
-            if(this->vertex(i).f < 0) {
-                nb_borders++ ;
-            }
-        }
-        double vol = signed_volume() ;
-        orientation_ = (vol > 0.0) ;
-        std::cerr << "Mesh loaded, nb_facets = " << nb_facets() 
-                  << " nb_borders = " << nb_borders 
-                  << " signed volume = " << vol
-                  << std::endl ;
-        if(!orientation_ && nb_borders == 0) {
-            std::cerr << " WARNING ! orientation is negative"
-                      << std::endl ;
-        }
-        return nb_borders ;
-    }
-
-    
-    void deliverVertsAndFaces(std::vector<openvdb::Vec3s> rdt_vertices, std::vector<openvdb::Vec3I> rdt_faces)
-    {
-
-        for(unsigned int i=0; i<nb_vertices(); i++) 
-        {
-            rdt_vertices.push_back(vec3(vertex(i)));
-        }
-        
-        for(unsigned int f=0; f<nb_facets(); f++) {
-
-	    int vertex_counter = 2; // goes from 2 to zero and tells the loop to visit all vertices in descending oder
-            for(unsigned int i=facet_begin(f); i<facet_end(f); i++) 
-            {
-                	rdt_faces[f][vertex_counter] = i+1;
-			vertex_counter -= 1;
-            }
-
-        }
-    }
-    
-    
-    }
 */
+	
+	//}
+
+
     unsigned int Mesh::load(const std::string& filename) {
         std::cerr << "Mesh: Loading " << filename << std::endl ;
         std::ifstream input(filename.c_str()) ;
@@ -397,6 +341,7 @@ namespace Geex {
             std::cerr << " WARNING ! orientation is negative"
                       << std::endl ;
         }
+        
         return nb_borders ;
     }
     

@@ -403,7 +403,9 @@ namespace Geex {
         
         /// lukas gartmair 17.8.16 
         /// function in order not to load the files but just to pass the points and faces
-        //unsigned int receiveVertsAndFaces(std::vector<openvdb::Vec3s> points, std::vector<openvdb::Vec3I> triangles, std::vector<openvdb::Vec4I> quads);
+       
+        int receiveVertices(std::vector<std::vector<float> > points);
+        void receiveTriangles(std::vector<std::vector<float> > triangles);
        
         // Note: does not save adjacencies, just geometry.
         void save(const std::string& filename) ;
