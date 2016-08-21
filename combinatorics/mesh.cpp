@@ -113,87 +113,30 @@ namespace Geex {
 	for(int i=0;i<triangles.size();i++) 
 	{
 		
-		// cur_facet without dimension initialization causes core dump
-		int dimension = 3;
-		std::vector<int> cur_facet(dimension);
-
-		cur_facet[0] = triangles[i][0]-1;
-		cur_facet[1] = triangles[i][1]-1;
-		cur_facet[2] = triangles[i][2]-1;
+                int i1,i2,i3 ;
+                i1 = triangles[i][0];
+                i2 = triangles[i][1];
+                i3 = triangles[i][2];
+                std::vector<unsigned int> cur_facet ;
+                cur_facet.push_back(i1-1) ;
+                cur_facet.push_back(i2-1) ;
+                cur_facet.push_back(i3-1) ;
+                unsigned int f = nb_facets() ;
+                begin_facet() ;
+                for(unsigned int i=0; i<cur_facet.size(); i++) {
+                    unsigned int v = cur_facet[i] ;
+                    
+                    add_vertex(VertexEdge(vertex[v])) ;
+                    /*
+                    top_vertex().set_flag(VertexEdge::ORIGINAL) ;
+                    vertex_index_.push_back(v) ;
+                    star[v].push_back(f) ;
+                */
+                }
+                end_facet() ;
 		
-		std::cout << cur_facet[0] << " "  << " " << cur_facet[1]<< " " << cur_facet[2] << std::endl; 
-
-}}
-/*		
-
-		unsigned int f = nb_facets() ;
-		
-		begin_facet() ;
-		
-		for(unsigned int i=0; i<cur_facet.size(); i++) 
-		{
-			unsigned int v = cur_facet[i] ;
-			add_vertex(VertexEdge(vertex[v])) ;
-			top_vertex().set_flag(VertexEdge::ORIGINAL) ;
-			vertex_index_.push_back(v) ;
-		}
-		
-		end_facet() ;
-		
-		unsigned int ft = nb_facets() ;
-		begin_facet() ;
-		for(unsigned int i=0; i<cur_facet.size(); i++) 
-		{
-			unsigned int v = cur_facet[i] ;
-			add_vertex(VertexEdge(vertex[v])) ;
-			top_vertex().set_flag(VertexEdge::ORIGINAL) ;
-			vertex_index_.push_back(v) ;
-			star[v].push_back(ft) ;
-		}
-		end_facet() ; 
 	} 
     }
-
-/*
-	for(int i=0;i<quads.size();i++) 
-	{
-		std::vector<int> cur_facet;
-		cur_facet[0] = quads[i][0]+1;
-		cur_facet[1] = quads[i][1]+1;
-		cur_facet[2] = quads[i][2]+1;
-		cur_facet[3] = quads[i][3]+1;
-
-		unsigned int f = nb_facets() ;
-		
-		begin_facet() ;
-		
-		for(unsigned int i=0; i<cur_facet.size(); i++) 
-		{
-			unsigned int v = cur_facet[i] ;
-			add_vertex(VertexEdge(vertex[v])) ;
-			top_vertex().set_flag(VertexEdge::ORIGINAL) ;
-			vertex_index_.push_back(v) ;
-		}
-	
-		end_facet() ;
-		
-		
-		
-		                    unsigned int fq = nb_facets() ;
-                    begin_facet() ;
-                    for(unsigned int i=0; i<cur_facet.size(); i++) {
-                        unsigned int v = cur_facet[i] ;
-                        add_vertex(VertexEdge(vertex[v])) ;
-                        top_vertex().set_flag(VertexEdge::ORIGINAL) ;
-                        vertex_index_.push_back(v) ;
-                        star[v].push_back(fq) ;
-                    }
-                    end_facet() ;
-	}
-*/
-	
-	//}
-
 
     unsigned int Mesh::load(const std::string& filename) {
         std::cerr << "Mesh: Loading " << filename << std::endl ;
