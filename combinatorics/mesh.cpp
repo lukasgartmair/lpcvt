@@ -109,10 +109,11 @@ namespace Geex {
    
    	std::vector<vec3> vertex ;
 	std::vector< std::vector<unsigned int> > star ; 
-
+	
 	for(int i=0;i<triangles.size();i++) 
 	{
 		
+		// cur_facet without dimension initialization causes core dump
 		int dimension = 3;
 		std::vector<int> cur_facet(dimension);
 
@@ -121,11 +122,10 @@ namespace Geex {
 		cur_facet[2] = triangles[i][2]-1;
 		
 		std::cout << cur_facet[0] << " "  << " " << cur_facet[1]<< " " << cur_facet[2] << std::endl; 
-	}
-	}
-	
-	/*
-		
+
+}}
+/*		
+
 		unsigned int f = nb_facets() ;
 		
 		begin_facet() ;
@@ -151,7 +151,8 @@ namespace Geex {
 			star[v].push_back(ft) ;
 		}
 		end_facet() ; 
-	} */
+	} 
+    }
 
 /*
 	for(int i=0;i<quads.size();i++) 
