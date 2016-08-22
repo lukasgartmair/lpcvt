@@ -46,10 +46,10 @@
 #ifndef __GEEX_CVT_RVD__
 #define __GEEX_CVT_RVD__
 
-#include <LpCVT/combinatorics/mesh.h>
-#include <LpCVT/combinatorics/delaunay_skel.h>
-#include <LpCVT/combinatorics/delaunay.h>
-#include <LpCVT/combinatorics/exact/RVD_predicates.h>
+#include "mesh.h"
+#include "delaunay_skel.h"
+#include "delaunay.h"
+#include "exact/RVD_predicates.h"
 #include <stack>
 #include <set>
 

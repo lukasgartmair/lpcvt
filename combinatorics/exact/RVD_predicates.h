@@ -2,7 +2,7 @@
 #ifndef __GEEX_CVT_RVD_PREDICATES__
 #define __GEEX_CVT_RVD_PREDICATES__
 
-#include <LpCVT/common/types.h>
+#include "../../common/types.h"
 
 namespace Geex {
 

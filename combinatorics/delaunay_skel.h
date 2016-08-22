@@ -46,8 +46,8 @@
 #ifndef __GEEX_CVT_DELAUNAY_SKEL__
 #define __GEEX_CVT_DELAUNAY_SKEL__
 
-#include <LpCVT/common/containers.h>
-#include <LpCVT/common/types.h>
+#include "../common/containers.h"
+#include "../common/types.h"
 #include <stack>
 
 namespace Geex {

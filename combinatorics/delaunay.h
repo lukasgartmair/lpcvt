@@ -46,8 +46,8 @@
 #ifndef __GEEX_CVT_DELAUNAY__
 #define __GEEX_CVT_DELAUNAY__
 
-#include <LpCVT/combinatorics/delaunay_skel.h>
-#include <LpCVT/combinatorics/voronoi_cell.h>
+#include "delaunay_skel.h"
+#include "voronoi_cell.h"
 
 #include <string>
 

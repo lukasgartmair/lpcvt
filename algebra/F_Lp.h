@@ -46,7 +46,7 @@
 #ifndef __GEEX_LPP_FAST__
 #define __GEEX_LPP_FAST__
 
-#include <LpCVT/common/types.h>
+#include "../common/types.h"
 #include <vector>
 
 namespace Geex {

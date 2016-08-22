@@ -46,7 +46,7 @@
 #ifndef __GEEX_CVT_VORONOI_CELL__
 #define __GEEX_CVT_VORONOI_CELL__
 
-#include <LpCVT/common/types.h>
+#include "../common/types.h"
 #include <vector>
 
 namespace Geex {
