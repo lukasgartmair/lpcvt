@@ -113,10 +113,9 @@ protected:
 		//std::cout << triangles[i][0]  << " " << triangles[i][1] << " " << triangles[i][2] << std::endl; 
 		}
 		
-		int number_of_verts = M.receiveVerticesAndTriangles(vertices, triangles);
+		int nb_borders = M.receiveVerticesAndTriangles(vertices, triangles);
 		
-		CPPUNIT_ASSERT_EQUAL(dimension,number_of_verts);
-	
+		CPPUNIT_ASSERT( nb_borders == 3);
 	
 	}
 	

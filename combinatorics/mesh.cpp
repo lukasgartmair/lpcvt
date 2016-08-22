@@ -127,12 +127,66 @@ namespace Geex {
 		        star[v].push_back(f) ;
                  }
                  end_facet() ;
+	}       
+        
+                 original_vertices_.resize(vertex.size());
+        std::copy(vertex.begin(), vertex.end(), original_vertices_.begin());
+        
+        // Step 2: compute facet adjacencies
+        for(unsigned int f=0; f<nb_facets(); f++) {
+            unsigned int facet_base = facet_begin(f) ;
+            unsigned int facet_n = facet_size(f) ;
+
+            for(unsigned int i=0; i<facet_n; i++) {
+                unsigned int v1 = facet_base + i ;
+                unsigned int v2 = facet_base + ((i + 1) % facet_n) ;
+                unsigned int gv1 = vertex_index_[v1] ;
+                unsigned int gv2 = vertex_index_[v2] ;
+                const std::vector<unsigned int>& S = star[gv1] ;
+                for(unsigned int k=0; k<S.size(); k++) {
+                    unsigned int g = S[k] ;
+                    if(
+                        g != f && has_edge(
+                            vertex_index_, 
+                            facet_begin(g), facet_end(g), gv2, gv1
+                        )
+                    ) {
+                        this->vertex(v1).f = g ;
+                        break ;
+                    }
+                }
+            }
+        }
+
+        // Step 3: assign facet ids
+        for(unsigned int f=0; f<nb_facets(); f++) {
+            facet_info(f).id = f ;
+        }
+
+        // Step 4: initialize symbolic information
+        init_symbolic_vertices() ;
+
+        // Just for checking
+        unsigned int nb_borders = 0 ;
+        for(unsigned int i=0; i<nb_vertices(); i++) {
+            if(this->vertex(i).f < 0) {
+                nb_borders++ ;
+            }
+        }
+        double vol = signed_volume() ;
+        orientation_ = (vol > 0.0) ;
+        std::cerr << "Mesh points received, nb_facets = " << nb_facets() 
+                  << " nb_borders = " << nb_borders 
+                  << " signed volume = " << vol
+                  << std::endl ;
+        if(!orientation_ && nb_borders == 0) {
+            std::cerr << " WARNING ! orientation is negative"
+                      << std::endl ;
+        }
 	
 	
-	return vertex.size();
-    
-    
-    }
+	return nb_borders;
+   
     }
 
     int Mesh::receiveVertices(std::vector<std::vector<float> > points)
