@@ -29,8 +29,8 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test3 - Receive Vertices",
 				&TestMesh::testMesh_ReceiveVertices ));
 				
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test4 - Receive Triangles",
-				&TestMesh::testMesh_ReceiveTriangles ));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test4 - Receive Vertices and Triangles",
+				&TestMesh::testMesh_ReceiveVerticesAndTriangles ));
 
 		return suiteOfTests;
 	}
@@ -81,24 +81,46 @@ protected:
 		CPPUNIT_ASSERT_EQUAL(dimension,number_of_verts);
 	}
 	
-	void testMesh_ReceiveTriangles()
+	void testMesh_ReceiveVerticesAndTriangles()
 	{
 		Geex::Mesh M ;
 	
-		int dimension = 10;
-		std::vector<std::vector<float> > triangles(dimension, std::vector<float>(dimension));
+	
+		// setup points
+		int dimension = 3;
+		std::vector<std::vector<float> > vertices(dimension, std::vector<float>(dimension));
 		// fill the points vector as in test_mesh_vertices.obj
 		for (int i=0;i<dimension;i++)
 		{
-			triangles[i][0] = 20+i;
-			triangles[i][1] = 20+i+1;
-			triangles[i][2] = 20+i+2;
-		//std::cout << triangles[i][0] << " "  << " " << triangles[i][1] << " " << triangles[i][2] << std::endl; 
+			vertices[i][0] = i;
+			vertices[i][1] = i;
+			vertices[i][2] = i;
+		//std::cout << vertices[i][0] << " "  << " " << vertices[i][1] << " " << vertices[i][2] << std::endl; 
 		}
 		
-		M.receiveTriangles(triangles);
-
+		// setup triangles
+		int rows = 1;
+		int columns = 3;
+		// how is this vector properly initialized??? 
+		std::vector<std::vector<float> > triangles(rows, std::vector<float>(columns));
+		// fill the points vector as in test_mesh_vertices.obj
+		for (int i=0;i<rows;i++)
+		{
+			triangles[i][0] = i+1;
+			triangles[i][1] = i+2;
+			triangles[i][2] = i+3;
+			
+		//std::cout << triangles[i][0]  << " " << triangles[i][1] << " " << triangles[i][2] << std::endl; 
+		}
+		
+		int number_of_verts = M.receiveVerticesAndTriangles(vertices, triangles);
+		
+		CPPUNIT_ASSERT_EQUAL(dimension,number_of_verts);
+	
+	
 	}
+	
+	
 	
 	
 

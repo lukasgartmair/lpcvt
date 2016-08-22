@@ -74,7 +74,66 @@ namespace Geex {
     
     
     /////// these are my own interface functions to receive and deliver openvdb vectors for points and faces
+    /////// in order to advoid 3depict runtime io operations 
     /////// lukas gartmair 17.08.2016
+    
+    int Mesh::receiveVerticesAndTriangles(std::vector<std::vector<float> > points, std::vector<std::vector<float> > triangles)
+    {
+    
+    	std::vector<vec3> vertex ;
+	std::vector< std::vector<unsigned int> > star ;
+	
+	// Step 1: load vertices and triangles
+        // (and keep track of stars, i.e. lists
+        //  of triangles incident to each vertex).
+
+	for( int i = 0; i < points.size(); i++)
+	{
+		double x = (double) points[i][0];
+		double y = (double) points[i][1];
+		double z = (double) points[i][2];
+		vec3 p;
+		p[0] = x;
+		p[1] = y;
+		p[2] = z;
+		vertex.push_back(p) ;
+		star.push_back( std::vector<unsigned int>() ) ;
+	}
+
+	for(int i=0;i<triangles.size();i++) 
+	{
+		
+                int i1,i2,i3 ;
+                i1 = triangles[i][0];
+                i2 = triangles[i][1];
+                i3 = triangles[i][2];
+                std::vector<int> cur_facet ;
+                cur_facet.push_back(i1-1) ;
+                cur_facet.push_back(i2-1) ;
+                cur_facet.push_back(i3-1) ;
+                unsigned int f = nb_facets() ;
+                begin_facet() ;
+                for(unsigned int i=0; i<cur_facet.size(); i++) 
+                {
+                    	unsigned int v = cur_facet[i] ;
+                          
+			//std::cerr << "cur_facet[i] = " << cur_facet[i] << std::endl ;
+			//std::cerr << "v = " << v << std::endl ;
+			//std::cerr << "v = " << VertexEdge(vertex[v]) << std::endl ;
+                    
+		        add_vertex(VertexEdge(vertex[v])) ;
+		        top_vertex().set_flag(VertexEdge::ORIGINAL) ;
+		        vertex_index_.push_back(v) ;
+		        star[v].push_back(f) ;
+                 }
+                 end_facet() ;
+	
+	
+	return vertex.size();
+    
+    
+    }
+    }
 
     int Mesh::receiveVertices(std::vector<std::vector<float> > points)
     {
@@ -101,41 +160,6 @@ namespace Geex {
 	
 	return vertex.size();
 
-    }
-    
-   void Mesh::receiveTriangles(std::vector<std::vector<float> > triangles)
-   
-   { 	
-   
-   	std::vector<vec3> vertex ;
-	std::vector< std::vector<unsigned int> > star ; 
-	
-	for(int i=0;i<triangles.size();i++) 
-	{
-		
-                int i1,i2,i3 ;
-                i1 = triangles[i][0];
-                i2 = triangles[i][1];
-                i3 = triangles[i][2];
-                std::vector<unsigned int> cur_facet ;
-                cur_facet.push_back(i1-1) ;
-                cur_facet.push_back(i2-1) ;
-                cur_facet.push_back(i3-1) ;
-                unsigned int f = nb_facets() ;
-                begin_facet() ;
-                for(unsigned int i=0; i<cur_facet.size(); i++) {
-                    unsigned int v = cur_facet[i] ;
-                    
-                    add_vertex(VertexEdge(vertex[v])) ;
-                    /*
-                    top_vertex().set_flag(VertexEdge::ORIGINAL) ;
-                    vertex_index_.push_back(v) ;
-                    star[v].push_back(f) ;
-                */
-                }
-                end_facet() ;
-		
-	} 
     }
 
     unsigned int Mesh::load(const std::string& filename) {
@@ -221,6 +245,11 @@ namespace Geex {
                     begin_facet() ;
                     for(unsigned int i=0; i<cur_facet.size(); i++) {
                         unsigned int v = cur_facet[i] ;
+                        
+                        
+                    //std::cerr << "cur_facet[i] = " << cur_facet[i] << std::endl ;
+                    //std::cerr << "v = " << v << std::endl ;
+                    //std::cerr << "v = " << vertex[v] << std::endl ;
                         add_vertex(VertexEdge(vertex[v])) ;
                         top_vertex().set_flag(VertexEdge::ORIGINAL) ;
                         vertex_index_.push_back(v) ;

@@ -405,7 +405,7 @@ namespace Geex {
         /// function in order not to load the files but just to pass the points and faces
        
         int receiveVertices(std::vector<std::vector<float> > points);
-        void receiveTriangles(std::vector<std::vector<float> > triangles);
+        int receiveVerticesAndTriangles(std::vector<std::vector<float> > points, std::vector<std::vector<float> > triangles);
        
         // Note: does not save adjacencies, just geometry.
         void save(const std::string& filename) ;
