@@ -65,10 +65,12 @@ protected:
 	{
 		Geex::Mesh M ;
 	
-		int dimension = 3;
-		std::vector<std::vector<float> > vertices(dimension, std::vector<float>(dimension));
+		// setup points
+		int number_of_vertices = 10;
+		int xyzs = 3;
+		std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyzs));
 		// fill the points vector as in test_mesh_vertices.obj
-		for (int i=0;i<dimension;i++)
+		for (int i=0;i<number_of_vertices;i++)
 		{
 			vertices[i][0] = i;
 			vertices[i][1] = i;
@@ -78,7 +80,7 @@ protected:
 		
 		
 		int number_of_verts = M.receiveVertices(vertices);
-		CPPUNIT_ASSERT_EQUAL(dimension,number_of_verts);
+		CPPUNIT_ASSERT_EQUAL(number_of_vertices,number_of_verts);
 	}
 	
 	void testMesh_ReceiveVerticesAndTriangles()
@@ -87,10 +89,11 @@ protected:
 	
 	
 		// setup points
-		int dimension = 3;
-		std::vector<std::vector<float> > vertices(dimension, std::vector<float>(dimension));
+		int number_of_vertices = 3;
+		int xyzs = 3;
+		std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyzs));
 		// fill the points vector as in test_mesh_vertices.obj
-		for (int i=0;i<dimension;i++)
+		for (int i=0;i<number_of_vertices;i++)
 		{
 			vertices[i][0] = i;
 			vertices[i][1] = i;
@@ -99,12 +102,12 @@ protected:
 		}
 		
 		// setup triangles
-		int rows = 1;
-		int columns = 3;
+		int number_of_triangles = 1;
+		int number_of_vertex_indices_per_triangle = 3;
 		// how is this vector properly initialized??? 
-		std::vector<std::vector<float> > triangles(rows, std::vector<float>(columns));
+		std::vector<std::vector<float> > triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
 		// fill the points vector as in test_mesh_vertices.obj
-		for (int i=0;i<rows;i++)
+		for (int i=0;i<number_of_triangles;i++)
 		{
 			triangles[i][0] = i+1;
 			triangles[i][1] = i+2;
@@ -114,7 +117,6 @@ protected:
 		}
 		
 		int nb_borders = M.receiveVerticesAndTriangles(vertices, triangles);
-		
 		CPPUNIT_ASSERT( nb_borders == 3);
 	
 	}
