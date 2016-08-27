@@ -117,6 +117,50 @@ namespace Geex {
         std::cerr << "Done." << std::endl ;
     }
 
+
+// Lukas Gartmair 22.08.2016
+// just write the points to another summary vector
+
+     // Used by save_RDT().
+    class WritePrimalTriangle {
+    public:
+        WritePrimalTriangle(
+	std::vector<std::vector<float> >& triangles
+        ) : triangles_(&triangles) { 
+        }
+        void operator()(unsigned int i, unsigned int j, unsigned int k) const {
+            
+		std::vector<float> p;
+		p[0] = i+1;
+		p[1] = j+1;
+		p[2] = k+1;
+		(*triangles_).push_back(p);
+
+        }
+
+    private:
+        std::vector<std::vector<float> >* triangles_;
+    } ;
+
+    /**
+     * Given a Restricted Voronoi Diagram, writes the Restricted Delaunay
+     * Triangulation to the faces vector
+     */
+    void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<double> > vertices, 
+    std::vector<std::vector<float> > triangles) 
+    {
+        std::cerr << "Computing and writing RDT" << std::endl ;
+        for(unsigned int i=0; i<RVD.delaunay()->nb_vertices(); i++) 
+        {
+            vertices[i][0] = RVD.delaunay()->vertex(i)[0];
+            vertices[i][1] = RVD.delaunay()->vertex(i)[1];
+            vertices[i][2] = RVD.delaunay()->vertex(i)[2];
+           
+        }
+        RVD.for_each_primal_triangle(WritePrimalTriangle(triangles));
+        std::cerr << "Done." << std::endl ;
+    }
+    
     //==================================================================================
 
     void test_combinatorics(const std::string& mesh_filename, const std::string& pts_filename) {
