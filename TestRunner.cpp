@@ -7,6 +7,10 @@
 // compile: sudo g++ -I/usr/include/openvdb TestRunner.cpp -lcppunit -ltbb -o RunTests
 //latest successful: sudo g++ -I/usr/include/openvdb ~/LpCVT/combinatorics/mesh.cpp TestRunner.cpp -lcppunit -ltbb -o RunTests
 //sudo g++ ~/LpCVT/combinatorics/mesh.cpp TestRunner.cpp -lcppunit -o RunTests
+//sudo g++ ~/LpCVT/combinatorics/mesh.cpp lpcvt_functions.cpp TestRunner.cpp -lcppunit -o RunTests
+// sudo g++ -lCGAL -lgmp -I/~/LpCVT/combinatorics ~/LpCVT/combinatorics/mesh.cpp ~/LpCVT/combinatorics/delaunay.cpp ~/LpCVT/combinatorics/delaunay_CGAL.cpp ~/LpCVT/combinatorics/exact/RVD_predicates.cpp lpcvt_functions.cpp TestRunner.cpp -lgmp -lCGAL -lcppunit -o RunTests
+
+
  
 using namespace std;
  

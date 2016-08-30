@@ -72,11 +72,6 @@ namespace Geex {
         return false ;
     }
     
-    
-    /////// these are my own interface functions to receive and deliver openvdb vectors for points and faces
-    /////// in order to advoid 3depict runtime io operations 
-    /////// lukas gartmair 17.08.2016
-    
     int Mesh::receiveVerticesAndTriangles(std::vector<std::vector<float> > points, std::vector<std::vector<float> > triangles)
     {
     
@@ -100,6 +95,7 @@ namespace Geex {
 		star.push_back( std::vector<unsigned int>() ) ;
 	}
 
+
 	for(int i=0;i<triangles.size();i++) 
 	{
 		
@@ -116,20 +112,15 @@ namespace Geex {
                 for(unsigned int i=0; i<cur_facet.size(); i++) 
                 {
                     	unsigned int v = cur_facet[i] ;
-                          
-			//std::cerr << "cur_facet[i] = " << cur_facet[i] << std::endl ;
-			//std::cerr << "v = " << v << std::endl ;
-			//std::cerr << "v = " << VertexEdge(vertex[v]) << std::endl ;
-                    
 		        add_vertex(VertexEdge(vertex[v])) ;
 		        top_vertex().set_flag(VertexEdge::ORIGINAL) ;
 		        vertex_index_.push_back(v) ;
 		        star[v].push_back(f) ;
                  }
                  end_facet() ;
-	}       
+	}     
         
-                 original_vertices_.resize(vertex.size());
+        original_vertices_.resize(vertex.size());
         std::copy(vertex.begin(), vertex.end(), original_vertices_.begin());
         
         // Step 2: compute facet adjacencies

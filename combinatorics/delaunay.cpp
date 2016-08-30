@@ -43,8 +43,8 @@
  *
  */
 
-#include <LpCVT/combinatorics/delaunay.h>
-#include <LpCVT/combinatorics/delaunay_CGAL.h>
+#include "delaunay.h"
+#include "delaunay_CGAL.h"
 
 
 namespace Geex {

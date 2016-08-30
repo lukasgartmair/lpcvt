@@ -43,7 +43,7 @@
  *
  */
 
-#include <LpCVT/combinatorics/delaunay_CGAL.h>
+#include "delaunay_CGAL.h"
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Point_3.h>
 #include <CGAL/Delaunay_triangulation_3.h>

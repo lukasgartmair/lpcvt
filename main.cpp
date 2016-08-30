@@ -116,9 +116,7 @@ namespace Geex {
         out.close();
         std::cerr << "Done." << std::endl ;
     }
-
-
-// Lukas Gartmair 22.08.2016
+    
 // just write the points to another summary vector
 
      // Used by save_RDT().

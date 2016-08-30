@@ -1,8 +1,8 @@
 
 
-#include <LpCVT/combinatorics/exact/RVD_predicates.h>
-#include <LpCVT/combinatorics/RVD.h>
-#include <LpCVT/common/types.h>
+#include "RVD_predicates.h"
+#include "../RVD.h"
+#include "../../common/types.h"
 
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Interval_nt.h>

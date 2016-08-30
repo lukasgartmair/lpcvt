@@ -46,7 +46,7 @@
 #ifndef __GEEX_CVT_DELAUNAY_CGAL__
 #define __GEEX_CVT_DELAUNAY_CGAL__
 
-#include <LpCVT/combinatorics/delaunay.h>
+#include "delaunay.h"
 
 namespace Geex {
 

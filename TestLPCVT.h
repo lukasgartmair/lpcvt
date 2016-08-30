@@ -7,6 +7,8 @@
 #include <cppunit/TestCase.h>
 
 #include "combinatorics/mesh.h"
+
+#include "lpcvt_functions.h"
  
 class TestMesh : public CppUnit::TestFixture {
 private:
@@ -31,6 +33,9 @@ public:
 				
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test4 - Receive Vertices and Triangles",
 				&TestMesh::testMesh_ReceiveVerticesAndTriangles ));
+				
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test5 - Test Combinatorics",
+				&TestMesh::testMesh_TestCombinatorics ));
 
 		return suiteOfTests;
 	}
@@ -87,7 +92,6 @@ protected:
 	{
 		Geex::Mesh M ;
 	
-	
 		// setup points
 		int number_of_vertices = 3;
 		int xyzs = 3;
@@ -104,22 +108,80 @@ protected:
 		// setup triangles
 		int number_of_triangles = 1;
 		int number_of_vertex_indices_per_triangle = 3;
-		// how is this vector properly initialized??? 
 		std::vector<std::vector<float> > triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
-		// fill the points vector as in test_mesh_vertices.obj
 		for (int i=0;i<number_of_triangles;i++)
 		{
 			triangles[i][0] = i+1;
 			triangles[i][1] = i+2;
 			triangles[i][2] = i+3;
-			
-		//std::cout << triangles[i][0]  << " " << triangles[i][1] << " " << triangles[i][2] << std::endl; 
 		}
+
 		
 		int nb_borders = M.receiveVerticesAndTriangles(vertices, triangles);
 		CPPUNIT_ASSERT( nb_borders == 3);
 	
 	}
+	
+	
+	void testMesh_TestCombinatorics()
+	
+	{
+
+		// setup points
+		int number_of_vertices = 10;
+		int xyzs = 3;
+		std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyzs));
+		// fill the points vector as in test_mesh_vertices.obj
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			vertices[i][0] = i;
+			vertices[i][1] = i;
+			vertices[i][2] = i;
+		}
+		// setup triangles
+		int number_of_triangles = 1;
+		int number_of_vertex_indices_per_triangle = 3;
+		std::vector<std::vector<float> > triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
+		for (int i=0;i<number_of_triangles;i++)
+		{
+			triangles[i][0] = i+1;
+			triangles[i][1] = i+2;
+			triangles[i][2] = i+3;
+		}
+		
+		Geex::test_combinatorics(vertices, triangles);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
