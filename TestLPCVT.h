@@ -154,7 +154,7 @@ protected:
 		int nov = 0;
 		nov = Geex::test_combinatorics(initial_mesh_vertices, triangles);
 		
-		CPPUNIT_ASSERT_EQUAL(7, nov);
+		CPPUNIT_ASSERT_EQUAL(10, nov);
 	}
 	
 	
@@ -181,7 +181,7 @@ protected:
 			triangles[i][1] = i+2;
 			triangles[i][2] = i+3;
 		}
-		
+		std::cerr << "          ========== unit test algebra ======" << std::endl ;
 		//Geex::test_algebra(initial_mesh_vertices, triangles);
 	
 	}
