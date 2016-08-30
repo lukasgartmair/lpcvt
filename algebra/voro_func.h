@@ -46,9 +46,9 @@
 #ifndef __VORO_FUNC_H__
 #define __VORO_FUNC_H__
 
-#include <LpCVT/algebra/three_planes_intersection.h>
-#include <LpCVT/algebra/integration_simplex.h>
-#include <LpCVT/combinatorics/mesh.h>
+#include "three_planes_intersection.h"
+#include "integration_simplex.h"
+#include "../combinatorics/mesh.h"
 
 namespace Geex {
 

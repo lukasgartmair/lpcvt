@@ -46,7 +46,7 @@
 #ifndef __MEASURE_H__
 #define __MEASURE_H__
 
-#include <LpCVT/common/types.h>
+#include "../common/types.h"
 
 //========================================================================================
 

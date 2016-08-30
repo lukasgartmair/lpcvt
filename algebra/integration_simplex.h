@@ -46,7 +46,7 @@
 #ifndef __INTEGRATION_SIMPLEX_H__
 #define __INTEGRATION_SIMPLEX_H__
 
-#include <LpCVT/algebra/measure.h>
+#include "measure.h"
 
 namespace Geex {
 

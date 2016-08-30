@@ -44,11 +44,11 @@
  */
 
 
-#include <LpCVT/algebra/F_Lp.h>
-#include <LpCVT/algebra/voro_func.h>
+#include "F_Lp.h"
+#include "voro_func.h"
 
 #ifdef CVT_MULTITHREAD
-#include <LpCVT/common/processor.h>
+#include "../common/processor.h"
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #endif

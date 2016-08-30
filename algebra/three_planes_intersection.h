@@ -46,7 +46,7 @@
 #ifndef __THREE_PLANES_INTERSECTION_H__
 #define __THREE_PLANES_INTERSECTION_H__
 
-#include <LpCVT/common/types.h>
+#include "../common/types.h"
 
 namespace Geex {
 
