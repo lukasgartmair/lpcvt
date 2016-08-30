@@ -130,13 +130,13 @@ protected:
 		// setup points
 		int number_of_vertices = 10;
 		int xyzs = 3;
-		std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyzs));
+		std::vector<std::vector<float> > initial_mesh_vertices(number_of_vertices, std::vector<float>(xyzs));
 		// fill the points vector as in test_mesh_vertices.obj
 		for (int i=0;i<number_of_vertices;i++)
 		{
-			vertices[i][0] = i;
-			vertices[i][1] = i;
-			vertices[i][2] = i;
+			initial_mesh_vertices[i][0] = i;
+			initial_mesh_vertices[i][1] = i;
+			initial_mesh_vertices[i][2] = i;
 		}
 		// setup triangles
 		int number_of_triangles = 1;
@@ -149,7 +149,7 @@ protected:
 			triangles[i][2] = i+3;
 		}
 		
-		Geex::test_combinatorics(vertices, triangles);
+		Geex::test_combinatorics(initial_mesh_vertices, triangles);
 		
 	}
 	
