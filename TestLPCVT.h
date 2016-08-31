@@ -182,6 +182,9 @@ protected:
 		nov = Geex::test_combinatorics(initial_mesh_vertices, triangles);
 		
 		CPPUNIT_ASSERT_EQUAL(8, nov);
+		int tris_size = triangles.size();
+		CPPUNIT_ASSERT_EQUAL(12, tris_size);
+		
 	}
 
 	

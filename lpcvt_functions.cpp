@@ -41,12 +41,7 @@ namespace Geex {
 		    cvt_vertices[i][2] = RVD.delaunay()->vertex(i)[2];
 		}
 
-		const std::string filename = "faces_test1.obj";
-
-		std::ofstream out(filename.c_str()) ;
-		RVD.for_each_primal_triangle(SavePrimalTriangle(out));
 		RVD.for_each_primal_triangle(WritePrimalTriangle(cvt_triangles));
-		std::cerr << "Done." << std::endl ;
 
 	}
 	    

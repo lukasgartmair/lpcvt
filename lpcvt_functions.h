@@ -36,7 +36,7 @@ namespace Geex {
         void operator()(unsigned int i, unsigned int j, unsigned int k) const
         {
         
-                std::cerr << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
+                //std::cerr << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
 		std::vector<float> p;
 		const int array_size = 3;
 		int pp[array_size] = {0, 0, 0};
@@ -50,65 +50,6 @@ namespace Geex {
     private:
         std::vector<std::vector<float> >* triangles_;
     } ;
-    
-    class SavePrimalTriangle {
-    public:
-        SavePrimalTriangle(
-            std::ofstream& out
-        ) : out_(&out) { 
-        }
-        void operator()(unsigned int i, unsigned int j, unsigned int k) const {
-            (*out_) << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
-        }
-
-    private:
-        std::ofstream* out_ ;
-    } ;
-    
-/*
-
-        PrimalTriangleAction(const T& do_it_in) : do_it(do_it_in) { }
-        void operator()(unsigned int iv1, Mesh* M) const {
-        }
-
-        // ACTION needs to implement:
-        //      operator()(unsigned int i, unsigned j, unsigned int k) const
-        //   where i,j,k denote the three indices of the Delaunay vertices 
-        //   that define the primal triangle.
-        template <class PRIMTRIACTION> inline void for_each_primal_triangle(
-            const PRIMTRIACTION& action
-        ) {
-            if(exact_) {
-                RVD_predicates::begin_stats() ;
-            }
-            // PrimalTriangleAction needs symbolic mode
-            bool sym_backup = symbolic_ ;
-            symbolic_ = true ;
-            this->template compute<Delaunay, PrimalTriangleAction<PRIMTRIACTION> >(
-                m, delaunay_, delaunay_->skeleton(), PrimalTriangleAction<PRIMTRIACTION>(action)
-            ) ;
-            symbolic_ = sym_backup ;
-            if(exact_) {
-                RVD_predicates::end_stats() ;
-            }
-        }
-        
-    class SavePrimalTriangle {
-    public:
-        SavePrimalTriangle(
-            std::ofstream& out
-        ) : out_(&out) { 
-        }
-        void operator()(unsigned int i, unsigned int j, unsigned int k) const {
-            (*out_) << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
-        }
-
-    private:
-        std::ofstream* out_ ;
-    } ;
-
-*/
-    
   
     
    /**
