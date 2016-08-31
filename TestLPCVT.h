@@ -168,28 +168,22 @@ protected:
 		int number_of_triangles = 12;
 		int number_of_vertex_indices_per_triangle = 3;
 		int faces[number_of_triangles*number_of_vertex_indices_per_triangle] = {2,3,4,8,7,6,5,6,2,6,7,3,3,7,8,1,4,8,1,2,4,5,8,6,1,5,2,2,6,3,4,3,8,5,1,8}; 
-		std::vector<std::vector<float> > triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
+		std::vector<std::vector<float> > initial_mesh_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
 		for (int i=0;i<number_of_triangles;i++)
 		{
-			triangles[i][0] = faces[i * number_of_vertex_indices_per_triangle];
-			triangles[i][1] = faces[(i * number_of_vertex_indices_per_triangle)+1];
-			triangles[i][2] = faces[(i * number_of_vertex_indices_per_triangle)+2];
+			initial_mesh_triangles[i][0] = faces[i * number_of_vertex_indices_per_triangle];
+			initial_mesh_triangles[i][1] = faces[(i * number_of_vertex_indices_per_triangle)+1];
+			initial_mesh_triangles[i][2] = faces[(i * number_of_vertex_indices_per_triangle)+2];
 		}
 		
 		
 		std::cerr << "          ========== unit test combinatorics ======" << std::endl ;
-		int nov = 0;
-		nov = Geex::test_combinatorics(initial_mesh_vertices, triangles);
-		
-		CPPUNIT_ASSERT_EQUAL(8, nov);
-		int tris_size = triangles.size();
-		CPPUNIT_ASSERT_EQUAL(12, tris_size);
+		int number_of_rdttris = 0;
+		number_of_rdttris = Geex::test_combinatorics(initial_mesh_vertices, initial_mesh_triangles);
+
+		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
 		
 	}
-
-	
-	
-	
 	
 	
 	

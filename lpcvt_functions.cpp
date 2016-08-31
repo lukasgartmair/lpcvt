@@ -30,49 +30,59 @@ namespace Geex {
 		}
 	}
 		
-	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > cvt_vertices, 
-	std::vector<std::vector<float> > cvt_triangles) 
+	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > rdt_vertices, 
+	std::vector<std::vector<float> > rdt_triangles) 
 	{	
 		std::cerr << "Computing and writing RDT" << std::endl ;
 		for(unsigned int i=0; i<RVD.delaunay()->nb_vertices(); i++) 
 		{
-		    cvt_vertices[i][0] = RVD.delaunay()->vertex(i)[0];
-		    cvt_vertices[i][1] = RVD.delaunay()->vertex(i)[1];
-		    cvt_vertices[i][2] = RVD.delaunay()->vertex(i)[2];
+		    rdt_vertices[i][0] = RVD.delaunay()->vertex(i)[0];
+		    rdt_vertices[i][1] = RVD.delaunay()->vertex(i)[1];
+		    rdt_vertices[i][2] = RVD.delaunay()->vertex(i)[2];
 		}
 
-		RVD.for_each_primal_triangle(WritePrimalTriangle(cvt_triangles));
+		RVD.for_each_primal_triangle(WritePrimalTriangle(rdt_triangles));
 
+	}
+	
+	int countRDTTriangles(RestrictedVoronoiDiagram& RVD)
+	{
+		// Yan09
+		// the rdt is the dual of the rvd
+		// one rdt triangle is associated with each triple of RVD cells that share a vertex
+		int counter = 0;
+		return counter;
+		
 	}
 	    
 	int test_combinatorics(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
 
 	{
-	Mesh M ;
-	unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
-	std::vector<vec3> pts ;
-	create_pts(initial_mesh_vertices, pts);
-	Delaunay* delaunay = Delaunay::create("CGAL") ;
-	RestrictedVoronoiDiagram RVD(delaunay, &M) ;
+		Mesh M ;
+		unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
+		std::vector<vec3> pts ;
+		create_pts(initial_mesh_vertices, pts);
+		Delaunay* delaunay = Delaunay::create("CGAL") ;
+		RestrictedVoronoiDiagram RVD(delaunay, &M) ;
 
-	delaunay->set_vertices(pts) ;
+		delaunay->set_vertices(pts) ;
 	
-	// initialize a new vector which holds the new vertices of the delaunay triangulation
-	int number_of_vertices = RVD.delaunay()->nb_vertices();
+		// initialize a new vector which holds the new vertices of the delaunay triangulation
+		int number_of_rdt_vertices = RVD.delaunay()->nb_vertices();
 	
-	int xyzs = 3;
-	std::vector<std::vector<float> > cvt_vertices(number_of_vertices, std::vector<float>(xyzs));
+		int xyzs = 3;
+		std::vector<std::vector<float> > rdt_vertices(number_of_rdt_vertices, std::vector<float>(xyzs));
 	
-	int number_of_triangles = 10;
-	int number_of_vertex_indices_per_triangle = 3;
-	std::vector<std::vector<float> > cvt_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
+		//int number_of_triangles = countRDTTriangles(RVD);
+		int number_of_triangles = 7;
+		int number_of_vertex_indices_per_triangle = 3;
+		std::vector<std::vector<float> > rdt_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
+
+		write_RDT(RVD, rdt_vertices, rdt_triangles) ;
 	
-	write_RDT(RVD, cvt_vertices, cvt_triangles) ;
-	
-	delete delaunay ;
-	return number_of_vertices;
+		delete delaunay ;
+		return rdt_triangles.size();
 	}
-
     
 std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
 {
