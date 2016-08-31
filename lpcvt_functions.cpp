@@ -45,9 +45,9 @@ namespace Geex {
 
 		std::ofstream out(filename.c_str()) ;
 		RVD.for_each_primal_triangle(SavePrimalTriangle(out));
+		RVD.for_each_primal_triangle(WritePrimalTriangle(cvt_triangles));
 		std::cerr << "Done." << std::endl ;
 
-		
 	}
 	    
 	int test_combinatorics(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
@@ -64,7 +64,7 @@ namespace Geex {
 	
 	// initialize a new vector which holds the new vertices of the delaunay triangulation
 	int number_of_vertices = RVD.delaunay()->nb_vertices();
-	/*
+	
 	int xyzs = 3;
 	std::vector<std::vector<float> > cvt_vertices(number_of_vertices, std::vector<float>(xyzs));
 	
@@ -73,7 +73,7 @@ namespace Geex {
 	std::vector<std::vector<float> > cvt_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
 	
 	write_RDT(RVD, cvt_vertices, cvt_triangles) ;
-	*/
+	
 	delete delaunay ;
 	return number_of_vertices;
 	}

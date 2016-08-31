@@ -37,8 +37,8 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test5 - Receive Vertices and Triangles Cube Mesh",
 				&TestMesh::testMesh_ReceiveVerticesAndTrianglesCubeMesh ));
 				
-		//suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test6 - Test Combinatorics",
-				//&TestMesh::testMesh_TestCombinatorics ));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test6 - Test Combinatorics",
+				&TestMesh::testMesh_TestCombinatorics ));
 
 		return suiteOfTests;
 	}
@@ -171,9 +171,9 @@ protected:
 		std::vector<std::vector<float> > triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
 		for (int i=0;i<number_of_triangles;i++)
 		{
-			triangles[i][0] = faces[i * number_of_triangles];
-			triangles[i][1] = faces[(i * number_of_triangles)+1];
-			triangles[i][2] = faces[(i * number_of_triangles)+2];
+			triangles[i][0] = faces[i * number_of_vertex_indices_per_triangle];
+			triangles[i][1] = faces[(i * number_of_vertex_indices_per_triangle)+1];
+			triangles[i][2] = faces[(i * number_of_vertex_indices_per_triangle)+2];
 		}
 		
 		
