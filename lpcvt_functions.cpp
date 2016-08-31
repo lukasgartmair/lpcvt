@@ -47,11 +47,10 @@ namespace Geex {
 	
 	int countRDTTriangles(RestrictedVoronoiDiagram& RVD)
 	{
-		// Yan09
-		// the rdt is the dual of the rvd
-		// one rdt triangle is associated with each triple of RVD cells that share a vertex
-		int counter = 0;
-		return counter;
+		
+		int tri_counter = 0;
+		RVD.for_each_primal_triangle(CountPrimalTriangles(tri_counter));
+		return tri_counter;
 		
 	}
 	    
@@ -72,15 +71,15 @@ namespace Geex {
 	
 		int xyzs = 3;
 		std::vector<std::vector<float> > rdt_vertices(number_of_rdt_vertices, std::vector<float>(xyzs));
-	
-		//int number_of_triangles = countRDTTriangles(RVD);
-		int number_of_triangles = 7;
+
+		int number_of_triangles = countRDTTriangles(RVD);
 		int number_of_vertex_indices_per_triangle = 3;
 		std::vector<std::vector<float> > rdt_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
 
 		write_RDT(RVD, rdt_vertices, rdt_triangles) ;
 	
 		delete delaunay ;
+		
 		return rdt_triangles.size();
 	}
     

@@ -23,14 +23,13 @@ namespace Geex {
 
 	std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin=0, float zmin=0);
 
-     // Used by save_RDT().
     class WritePrimalTriangle{
     public:
         WritePrimalTriangle(std::vector<std::vector<float> >& triangles) : triangles_(&triangles){}
         void operator()(unsigned int i, unsigned int j, unsigned int k) const
         {
         
-                std::cerr << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
+                //std::cerr << "f " << i+1 << " " << j+1 << " " << k+1 << std::endl ;
 		std::vector<float> p;
 		const int array_size = 3;
 		int pp[array_size] = {0, 0, 0};
@@ -44,11 +43,21 @@ namespace Geex {
     private:
         std::vector<std::vector<float> >* triangles_;
     } ;
-
     
+    
+    class CountPrimalTriangles{
+    public:
+        CountPrimalTriangles(int& tri_counter) : tri_counter_(&tri_counter){}
+        void operator()(unsigned int i, unsigned int j, unsigned int k) const
+        {
+		(*tri_counter_)+=1;
 
+        }
 
+    private:
+        int* tri_counter_;
+    } ;
 
 }
 
-#endif
+#endif 
