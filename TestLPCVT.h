@@ -36,10 +36,10 @@ public:
 				
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test5 - Test Combinatorics",
 				&TestMesh::testMesh_TestCombinatorics ));
-				
+		/*	
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test6 - Test Algebra",
 				&TestMesh::testMesh_TestAlgebra ));
-
+*/
 		return suiteOfTests;
 	}
  
@@ -129,35 +129,34 @@ protected:
 	void testMesh_TestCombinatorics()
 	
 	{
+		// cube mesh
 		// setup points
-		int number_of_vertices = 10;
+		int number_of_vertices = 8;
 		int xyzs = 3;
 		std::vector<std::vector<float> > initial_mesh_vertices(number_of_vertices, std::vector<float>(xyzs));
 		// fill the points vector as in test_mesh_vertices.obj
-		for (int i=0;i<number_of_vertices;i++)
-		{
-			initial_mesh_vertices[i][0] = i;
-			initial_mesh_vertices[i][1] = i;
-			initial_mesh_vertices[i][2] = i;
-		}
+		initial_mesh_vertices = Geex::initializeCubeVertices();
 		// setup triangles
-		int number_of_triangles = 1;
+		int number_of_triangles = 12;
 		int number_of_vertex_indices_per_triangle = 3;
+		int faces[number_of_triangles*number_of_vertex_indices_per_triangle] = {2,3,4,8,7,6,5,6,2,6,7,3,3,7,8,1,4,8,1,2,4,5,8,6,1,5,2,2,6,3,4,3,8,5,1,8}; 
 		std::vector<std::vector<float> > triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
 		for (int i=0;i<number_of_triangles;i++)
 		{
-			triangles[i][0] = i+1;
-			triangles[i][1] = i+2;
-			triangles[i][2] = i+3;
+			triangles[i][0] = i * number_of_triangles;
+			triangles[i][1] = (i * number_of_triangles)+1;
+			triangles[i][2] = (i * number_of_triangles)+2;
 		}
+		
+		
 		std::cerr << "          ========== unit test combinatorics ======" << std::endl ;
 		int nov = 0;
 		nov = Geex::test_combinatorics(initial_mesh_vertices, triangles);
 		
-		CPPUNIT_ASSERT_EQUAL(10, nov);
+		CPPUNIT_ASSERT_EQUAL(8, nov);
 	}
 	
-	
+	/*
 	void testMesh_TestAlgebra()
 	{
 		// setup points
@@ -185,6 +184,7 @@ protected:
 		//Geex::test_algebra(initial_mesh_vertices, triangles);
 	
 	}
+	*/
 	
 	
 	
