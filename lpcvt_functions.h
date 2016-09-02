@@ -23,6 +23,13 @@ namespace Geex {
 
 	std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin=0, float zmin=0);
 
+	float test_algebra(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles);
+	
+	float compute_F_g(Mesh* m, const std::vector<vec3>& pts, unsigned int p, bool volume);
+	
+	void get_combinatorics(Mesh* M, const std::vector<vec3>& pts, std::vector<int>& I, std::vector<vec3>& C, std::vector<int>& F, bool volume);
+	
+
     class WritePrimalTriangle{
     public:
         WritePrimalTriangle(std::vector<std::vector<float> >& triangles) : triangles_(&triangles){}
@@ -57,6 +64,51 @@ namespace Geex {
     private:
         int* tri_counter_;
     } ;
+    
+    /**
+     * Used by get_combinatorics() in surface mode
+     */
+    class MemorizeIndicesAndFacets{
+    public:
+        MemorizeIndicesAndFacets(
+            const RestrictedVoronoiDiagram& RVD_in,
+            std::vector<int>& I_in,
+            std::vector<vec3>& C_in,
+            std::vector<int>& F_in
+        ) : RVD(RVD_in), I(I_in), C(C_in), F(F_in) {
+            I.resize(0) ;
+            C.resize(0) ;
+            F.resize(0) ;
+        }
+
+        void operator() (
+            unsigned int i, 
+            const VertexEdge& v1, 
+            const VertexEdge& v2, 
+            const VertexEdge& v3
+        ) const {
+            I.push_back(i) ;
+            I.push_back(v1.sym[2]) ;
+            I.push_back(v1.sym[1]) ;
+            I.push_back(v1.sym[0]) ;
+            I.push_back(v2.sym[2]) ;
+            I.push_back(v2.sym[1]) ;
+            I.push_back(v2.sym[0]) ;
+            I.push_back(v3.sym[2]) ;
+            I.push_back(v3.sym[1]) ;
+            I.push_back(v3.sym[0]) ;
+            F.push_back(RVD.current_facet()) ;
+            C.push_back(v1) ;
+            C.push_back(v2) ;
+            C.push_back(v3) ;
+        }
+    private:
+        const RestrictedVoronoiDiagram& RVD ;
+        std::vector<int>& I ;
+        std::vector<vec3>& C ;
+        std::vector<int>& F ;
+    } ;
+
 
 }
 

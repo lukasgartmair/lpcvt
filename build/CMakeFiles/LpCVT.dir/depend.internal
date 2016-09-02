@@ -4,67 +4,75 @@
 CMakeFiles/LpCVT.dir/TestRunner.o
  /home/lgartmair/LpCVT/TestLPCVT.h
  /home/lgartmair/LpCVT/TestRunner.cpp
+ /home/lgartmair/LpCVT/algebra/F_Lp.h
+ /home/lgartmair/LpCVT/combinatorics/RVD.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay_skel.h
+ /home/lgartmair/LpCVT/combinatorics/exact/RVD_predicates.h
+ /home/lgartmair/LpCVT/combinatorics/mesh.h
+ /home/lgartmair/LpCVT/combinatorics/symbolic_vertex.h
+ /home/lgartmair/LpCVT/combinatorics/voronoi_cell.h
+ /home/lgartmair/LpCVT/common/containers.h
+ /home/lgartmair/LpCVT/common/line_stream.h
+ /home/lgartmair/LpCVT/common/matrix.h
+ /home/lgartmair/LpCVT/common/plane.h
+ /home/lgartmair/LpCVT/common/types.h
+ /home/lgartmair/LpCVT/common/vecg.h
+ /home/lgartmair/LpCVT/lpcvt_functions.h
+CMakeFiles/LpCVT.dir/algebra/F_Lp.o
+ /home/lgartmair/LpCVT/algebra/F_Lp.cpp
+ /home/lgartmair/LpCVT/algebra/F_Lp.h
+ /home/lgartmair/LpCVT/algebra/integration_simplex.h
+ /home/lgartmair/LpCVT/algebra/measure.h
+ /home/lgartmair/LpCVT/algebra/three_planes_intersection.h
+ /home/lgartmair/LpCVT/algebra/voro_func.h
  /home/lgartmair/LpCVT/combinatorics/mesh.h
  /home/lgartmair/LpCVT/combinatorics/symbolic_vertex.h
  /home/lgartmair/LpCVT/common/containers.h
  /home/lgartmair/LpCVT/common/matrix.h
  /home/lgartmair/LpCVT/common/plane.h
+ /home/lgartmair/LpCVT/common/processor.h
  /home/lgartmair/LpCVT/common/types.h
  /home/lgartmair/LpCVT/common/vecg.h
-CMakeFiles/LpCVT.dir/algebra/F_Lp.o
- ../../LpCVT/algebra/F_Lp.h
- ../../LpCVT/algebra/integration_simplex.h
- ../../LpCVT/algebra/measure.h
- ../../LpCVT/algebra/three_planes_intersection.h
- ../../LpCVT/algebra/voro_func.h
- ../../LpCVT/combinatorics/mesh.h
- ../../LpCVT/combinatorics/symbolic_vertex.h
- ../../LpCVT/common/containers.h
- ../../LpCVT/common/matrix.h
- ../../LpCVT/common/plane.h
- ../../LpCVT/common/processor.h
- ../../LpCVT/common/types.h
- ../../LpCVT/common/vecg.h
- /home/lgartmair/LpCVT/algebra/F_Lp.cpp
 CMakeFiles/LpCVT.dir/combinatorics/delaunay.o
- ../../LpCVT/combinatorics/delaunay.h
- ../../LpCVT/combinatorics/delaunay_CGAL.h
- ../../LpCVT/combinatorics/delaunay_skel.h
- ../../LpCVT/combinatorics/voronoi_cell.h
- ../../LpCVT/common/containers.h
- ../../LpCVT/common/matrix.h
- ../../LpCVT/common/plane.h
- ../../LpCVT/common/types.h
- ../../LpCVT/common/vecg.h
  /home/lgartmair/LpCVT/combinatorics/delaunay.cpp
+ /home/lgartmair/LpCVT/combinatorics/delaunay.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay_CGAL.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay_skel.h
+ /home/lgartmair/LpCVT/combinatorics/voronoi_cell.h
+ /home/lgartmair/LpCVT/common/containers.h
+ /home/lgartmair/LpCVT/common/matrix.h
+ /home/lgartmair/LpCVT/common/plane.h
+ /home/lgartmair/LpCVT/common/types.h
+ /home/lgartmair/LpCVT/common/vecg.h
 CMakeFiles/LpCVT.dir/combinatorics/delaunay_CGAL.o
- ../../LpCVT/combinatorics/delaunay.h
- ../../LpCVT/combinatorics/delaunay_CGAL.h
- ../../LpCVT/combinatorics/delaunay_skel.h
- ../../LpCVT/combinatorics/voronoi_cell.h
- ../../LpCVT/common/containers.h
- ../../LpCVT/common/matrix.h
- ../../LpCVT/common/plane.h
- ../../LpCVT/common/types.h
- ../../LpCVT/common/vecg.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay.h
  /home/lgartmair/LpCVT/combinatorics/delaunay_CGAL.cpp
+ /home/lgartmair/LpCVT/combinatorics/delaunay_CGAL.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay_skel.h
+ /home/lgartmair/LpCVT/combinatorics/voronoi_cell.h
+ /home/lgartmair/LpCVT/common/containers.h
+ /home/lgartmair/LpCVT/common/matrix.h
+ /home/lgartmair/LpCVT/common/plane.h
+ /home/lgartmair/LpCVT/common/types.h
+ /home/lgartmair/LpCVT/common/vecg.h
 CMakeFiles/LpCVT.dir/combinatorics/exact/RVD_predicates.o
- ../../LpCVT/combinatorics/RVD.h
- ../../LpCVT/combinatorics/delaunay.h
- ../../LpCVT/combinatorics/delaunay_skel.h
- ../../LpCVT/combinatorics/exact/RVD_predicates.h
- ../../LpCVT/combinatorics/mesh.h
- ../../LpCVT/combinatorics/symbolic_vertex.h
- ../../LpCVT/combinatorics/voronoi_cell.h
- ../../LpCVT/common/containers.h
- ../../LpCVT/common/matrix.h
- ../../LpCVT/common/plane.h
- ../../LpCVT/common/types.h
- ../../LpCVT/common/vecg.h
+ /home/lgartmair/LpCVT/combinatorics/RVD.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay.h
+ /home/lgartmair/LpCVT/combinatorics/delaunay_skel.h
  /home/lgartmair/LpCVT/combinatorics/exact/RVD_predicates.cpp
+ /home/lgartmair/LpCVT/combinatorics/exact/RVD_predicates.h
  /home/lgartmair/LpCVT/combinatorics/exact/side1_static_filter.h
  /home/lgartmair/LpCVT/combinatorics/exact/side2_static_filter.h
  /home/lgartmair/LpCVT/combinatorics/exact/side3_static_filter.h
+ /home/lgartmair/LpCVT/combinatorics/mesh.h
+ /home/lgartmair/LpCVT/combinatorics/symbolic_vertex.h
+ /home/lgartmair/LpCVT/combinatorics/voronoi_cell.h
+ /home/lgartmair/LpCVT/common/containers.h
+ /home/lgartmair/LpCVT/common/matrix.h
+ /home/lgartmair/LpCVT/common/plane.h
+ /home/lgartmair/LpCVT/common/types.h
+ /home/lgartmair/LpCVT/common/vecg.h
 CMakeFiles/LpCVT.dir/combinatorics/mesh.o
  /home/lgartmair/LpCVT/combinatorics/mesh.cpp
  /home/lgartmair/LpCVT/combinatorics/mesh.h
@@ -95,4 +103,3 @@ CMakeFiles/LpCVT.dir/main.o
  /home/lgartmair/LpCVT/common/vecg.h
  /home/lgartmair/LpCVT/main.cpp
 CMakeFiles/LpCVT.dir/main_functions.o
- /home/lgartmair/LpCVT/main_functions.cpp

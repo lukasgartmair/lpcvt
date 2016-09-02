@@ -258,9 +258,9 @@ namespace Geex {
         delete delaunay ;
     }
 
-    /**
-     * Computes F_{L_p} and its gradient.
-     */
+
+     // Computes F_{L_p} and its gradient.
+     
     void compute_F_g(Mesh* m, const std::vector<vec3>& pts, unsigned int p, bool volume) {
         std::cerr << "nb pts = " << pts.size() << "   nb facets = " << m->nb_facets() << std::endl ;
         std::vector<int> I ;
