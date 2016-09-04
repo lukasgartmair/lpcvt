@@ -4,9 +4,9 @@
 #include "combinatorics/mesh.h"
 #include "combinatorics/delaunay.h"
 #include "combinatorics/RVD.h"
+#include "combinatorics/exact/RVD_predicates.h"
 #include "algebra/F_Lp.h"
 #include "common/line_stream.h"
-#include "combinatorics/exact/RVD_predicates.h"
 #include <fstream>
 #include "algebra/F_Lp.h"
 
@@ -15,7 +15,7 @@
 namespace Geex {
 	void create_pts(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<vec3>& pts);
 
-	int  test_combinatorics(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles);
+	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles);
 	
 	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > cvt_vertices, std::vector<std::vector<float> > cvt_triangles);
 	

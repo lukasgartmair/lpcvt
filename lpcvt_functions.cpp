@@ -9,8 +9,10 @@
 #include "algebra/F_Lp.h"
 #include "lpcvt_functions.h"
         
-// Just pass the mesh vertices to instead a point cloud
-// this is a critical question how to handle this library
+// // create shared library of this with sudo g++ -std=c++11 -fPIC -shared lpcvt_functions.cpp -o /usr/lib/libLpCVT_functions.so
+
+// in 3Depict all the references are required like this 
+//sudo g++ -fPIC -shared lpcvt_functions.cpp combinatorics/exact/RVD_predicates.cpp combinatorics/mesh.cpp combinatorics/delaunay.cpp combinatorics/delaunay_CGAL.cpp algebra/F_Lp.cpp  -lCGAL -lgmp -o /usr/lib/libLpCVT_functions.so
 
 namespace Geex {
 
@@ -54,7 +56,7 @@ namespace Geex {
 		
 	}
 	    
-	int test_combinatorics(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
+	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
 
 	{
 		Mesh M ;

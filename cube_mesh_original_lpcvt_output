@@ -1,3 +1,5 @@
+lgartmair@lgartmair-GA-H81M-D2V:~$ cd LpCVT_original/
+lgartmair@lgartmair-GA-H81M-D2V:~/LpCVT_original$ ./LpCVT data/cube_mesh.obj data/cube_mesh.pts
 ============= geometry->combinatorics test ==========
 Mesh: Loading data/cube_mesh.obj
 Mesh loaded, nb_facets = 12 nb_borders = 0 signed volume = 1
@@ -21,5 +23,4 @@ Mesh loaded, nb_facets = 12 nb_borders = 0 signed volume = 1
 nb pts = 8   nb facets = 12
 Creating Delaunay implementation, using CGAL
 Evaluating F-Lp, using 8 threads 
-surface F_L4:f=4.5000000000000000e+00  g=9.4708640379323370e+00
-
+surface F_L2:f=1.2000000000000000e+01  g=1.5400131898785803e+01

@@ -182,7 +182,7 @@ protected:
 		
 		std::cerr << "          ========== unit test combinatorics ======" << std::endl ;
 		int number_of_rdttris = 0;
-		number_of_rdttris = Geex::test_combinatorics(initial_mesh_vertices, initial_mesh_triangles);
+		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_triangles);
 
 		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
 		
