@@ -12,6 +12,9 @@
 
 //sudo g++ -std=c++11 -lCGAL -lgmp -I/~/LpCVT/combinatorics ~/LpCVT/combinatorics/mesh.cpp ~/LpCVT/combinatorics/delaunay.cpp ~/LpCVT/combinatorics/delaunay_CGAL.cpp ~/LpCVT/combinatorics/exact/RVD_predicates.cpp lpcvt_functions.cpp TestRunner.cpp -lgmp -lCGAL -lcppunit -o RunTests
 
+//sudo g++ -lCGAL -lgmp -I/~/LpCVT/combinatorics ~/LpCVT/combinatorics/mesh.cpp ~/LpCVT/combinatorics/delaunay.cpp ~/LpCVT/combinatorics/delaunay_CGAL.cpp ~/LpCVT/combinatorics/exact/RVD_predicates.cpp lpcvt_functions.cpp ~/LpCVT/algebra/F_Lp.cpp TestRunner.cpp -lgmp -lCGAL -lcppunit -o RunTests
+
+
 
 
  

@@ -101,10 +101,10 @@ namespace Geex {
     ) {
         Delaunay* delaunay = Delaunay::create("CGAL") ;
         delaunay->set_vertices(pts) ;
-            RestrictedVoronoiDiagram RVD(delaunay,M) ;
-            RVD.set_symbolic(true) ;
-            RVD.for_each_triangle(MemorizeIndicesAndFacets(RVD,I,C,F)) ;
-        
+	RestrictedVoronoiDiagram RVD(delaunay,M) ;
+	RVD.set_symbolic(true) ;
+	RVD.for_each_triangle(MemorizeIndicesAndFacets(RVD,I,C,F)) ;
+           
         delete delaunay ;
     }
     

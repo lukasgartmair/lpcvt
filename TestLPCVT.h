@@ -40,7 +40,7 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test6 - Test Combinatorics",
 				&TestMesh::testMesh_TestCombinatorics ));
 
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test6 - Test Algebra",
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test7 - Test Algebra",
 				&TestMesh::testMesh_TestAlgebra ));
 
 		return suiteOfTests;
@@ -219,10 +219,6 @@ protected:
 		CPPUNIT_ASSERT_EQUAL(assert_f, FL_p);
 		
 	}
-	
-	
-	
-	
 	
 	
 	
