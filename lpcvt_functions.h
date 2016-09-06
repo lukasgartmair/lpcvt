@@ -22,6 +22,9 @@ namespace Geex {
 	
 	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > cvt_vertices, std::vector<std::vector<float> > cvt_triangles);
 	
+	void write_RDTByReference(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > &rdt_vertices, 
+	std::vector<std::vector<float> > &rdt_triangles);
+	
 	int countRDTTriangles(RestrictedVoronoiDiagram& RVD);
 
 	std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin=0, float zmin=0);

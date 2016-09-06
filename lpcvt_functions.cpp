@@ -45,6 +45,21 @@ namespace Geex {
 		}
 
 		RVD.for_each_primal_triangle(WritePrimalTriangle(rdt_triangles));
+	}
+	
+	void write_RDTByReference(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > &rdt_vertices, 
+	std::vector<std::vector<float> > &rdt_triangles) 
+	{	
+	
+		std::cerr << "Computing and writing RDT by reference" << std::endl ;
+		for(int i=0; i<RVD.delaunay()->nb_vertices(); i++) 
+		{
+		    rdt_vertices[i][0] = RVD.delaunay()->vertex(i)[0];
+		    rdt_vertices[i][1] = RVD.delaunay()->vertex(i)[1];
+		    rdt_vertices[i][2] = RVD.delaunay()->vertex(i)[2];
+		}
+		
+		RVD.for_each_primal_triangle(WritePrimalTriangle(rdt_triangles));
 
 	}
 	
@@ -99,6 +114,9 @@ namespace Geex {
 
 		delaunay->set_vertices(pts) ;
 		
+		// this is only valid for vertices as they are referenced in writeRDT by index
+		// the triangles are passed to RCD.each_primal_triangle which only takes an
+		// initialized but not presized vector
 		//resize the referenced vectors as the actual sizes are not know until here
 		int number_of_rdt_vertices = RVD.delaunay()->nb_vertices();
 		int xyzs = 3;
@@ -107,17 +125,8 @@ namespace Geex {
 		{
    			rdt_vertices[i].resize(xyzs);
 		}
-		
-		int number_of_rdt_triangles = countRDTTriangles(RVD);
-		int number_of_vertex_indices_per_triangle = 3;
-		rdt_triangles.resize(number_of_rdt_triangles);
-		for (int i = 0; i < number_of_rdt_triangles; ++i)
-		{
-   			rdt_triangles[i].resize(number_of_vertex_indices_per_triangle);
-		}
 
-		// now write to the resized vectors
-		write_RDT(RVD, rdt_vertices, rdt_triangles) ;
+		write_RDTByReference(RVD, rdt_vertices, rdt_triangles) ;
 	
 		delete delaunay ;
 	}

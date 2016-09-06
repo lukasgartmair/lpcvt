@@ -21,7 +21,7 @@ public:
  
 	static CppUnit::Test *suite() {
 		CppUnit::TestSuite *suiteOfTests = new CppUnit::TestSuite("TestMesh");
- 
+
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test1 - Test the Test itsself",
 				&TestMesh::testMesh_TestTheTest ));
 				
@@ -42,7 +42,7 @@ public:
 
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test7 - Test Algebra",
 				&TestMesh::testMesh_TestAlgebra ));
-				
+			
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test8 - Test Combinatorics with reference arguments",
 				&TestMesh::testMesh_TestCombinatoricsByReference ));
 
@@ -290,19 +290,42 @@ protected:
 		std::cerr << "          ========== unit test combinatorics by reference ======" << std::endl ;
 		
 		// initialize a new vector which holds the new vertices of the delaunay triangulation
-		int initialization_size = 0;
-		std::vector<std::vector<float> > rdt_vertices(initialization_size, std::vector<float>(xyzs));
+		std::vector<std::vector<float> > rdt_vertices;
 
-		std::vector<std::vector<float> > rdt_triangles(initialization_size, std::vector<float>(number_of_vertex_indices_per_triangle));
-		
-		int number_of_rdttris = rdt_triangles.size();
-		
-		CPPUNIT_ASSERT_EQUAL(initialization_size, number_of_rdttris);
+		std::vector<std::vector<float> > rdt_triangles;
 		
 		Geex::getCombinatorialStructureOfFLpByReference(initial_mesh_vertices, initial_mesh_triangles, rdt_vertices, rdt_triangles);
 
-		number_of_rdttris = rdt_triangles.size();
+		int number_of_rdttris = rdt_triangles.size();
 		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
+		
+		int number_of_rdtverts = rdt_vertices.size();
+		CPPUNIT_ASSERT_EQUAL(8, number_of_rdtverts);
+
+		// check the contents - i got only zeros in 3depict as content
+		int rdt_verts[number_of_rdtverts*xyzs] = {1,0,0,1,0,1,0,0,1,0,0,0,1,1,0,1,1,1,0,1,1,0,1,0}; 
+		int verts_counter = 0;
+		
+		for (int i=0;i<rdt_vertices.size();i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(rdt_verts[verts_counter], rdt_vertices[i][j], 0.01);
+				verts_counter += 1;
+			}
+		}
+
+		int rdt_faces[number_of_rdttris*number_of_vertex_indices_per_triangle] = {3,7,4,1,4,5,1,2,4,1,5,2,2,5,6,5,8,6,2,6,3}; 
+		int faces_counter = 0;
+		
+		for (int i=0;i<rdt_triangles.size();i++)
+		{
+			for (int j=0;j<number_of_vertex_indices_per_triangle;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(rdt_faces[faces_counter], rdt_triangles[i][j], 0.01);
+				faces_counter += 1;
+			}
+		}
 	
 	}
 	
