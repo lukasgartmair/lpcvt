@@ -35,8 +35,9 @@ namespace Geex {
 	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > rdt_vertices, 
 	std::vector<std::vector<float> > rdt_triangles) 
 	{	
+	
 		std::cerr << "Computing and writing RDT" << std::endl ;
-		for(unsigned int i=0; i<RVD.delaunay()->nb_vertices(); i++) 
+		for(int i=0; i<RVD.delaunay()->nb_vertices(); i++) 
 		{
 		    rdt_vertices[i][0] = RVD.delaunay()->vertex(i)[0];
 		    rdt_vertices[i][1] = RVD.delaunay()->vertex(i)[1];
@@ -83,6 +84,42 @@ namespace Geex {
 		delete delaunay ;
 		
 		return rdt_triangles.size();
+	}
+	
+	
+	void getCombinatorialStructureOfFLpByReference(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles, 
+	std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles)
+	{
+		Mesh M ;
+		unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
+		std::vector<vec3> pts ;
+		create_pts(initial_mesh_vertices, pts);
+		Delaunay* delaunay = Delaunay::create("CGAL") ;
+		RestrictedVoronoiDiagram RVD(delaunay, &M) ;
+
+		delaunay->set_vertices(pts) ;
+		
+		//resize the referenced vectors as the actual sizes are not know until here
+		int number_of_rdt_vertices = RVD.delaunay()->nb_vertices();
+		int xyzs = 3;
+		rdt_vertices.resize(number_of_rdt_vertices);
+		for (int i = 0; i < number_of_rdt_vertices; ++i)
+		{
+   			rdt_vertices[i].resize(xyzs);
+		}
+		
+		int number_of_rdt_triangles = countRDTTriangles(RVD);
+		int number_of_vertex_indices_per_triangle = 3;
+		rdt_triangles.resize(number_of_rdt_triangles);
+		for (int i = 0; i < number_of_rdt_triangles; ++i)
+		{
+   			rdt_triangles[i].resize(number_of_vertex_indices_per_triangle);
+		}
+
+		// now write to the resized vectors
+		write_RDT(RVD, rdt_vertices, rdt_triangles) ;
+	
+		delete delaunay ;
 	}
 	
     /**

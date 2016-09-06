@@ -17,6 +17,9 @@ namespace Geex {
 
 	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles);
 	
+	void getCombinatorialStructureOfFLpByReference(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles, 
+	std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles);
+	
 	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > cvt_vertices, std::vector<std::vector<float> > cvt_triangles);
 	
 	int countRDTTriangles(RestrictedVoronoiDiagram& RVD);
