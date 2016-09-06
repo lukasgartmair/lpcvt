@@ -186,6 +186,50 @@ protected:
 
 		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
 		
+		std::cerr << "          ========== unit test combinatorics corrupted faces ======" << std::endl ;
+		
+		// the function crashes within the 3Depict Isosurface program - trying to find the reason here
+		// what can cause a segmentation fault?
+		
+		
+		// corrupted faces i.e. 1 instead of 2 as first vertice
+		int corrupted_faces[number_of_triangles*number_of_vertex_indices_per_triangle] = {1,3,4,8,7,6,5,6,2,6,7,3,3,7,8,1,4,8,1,2,4,5,8,6,1,5,2,2,6,3,4,3,8,5,1,8}; 
+	
+		for (int i=0;i<number_of_triangles;i++)
+		{
+			initial_mesh_triangles[i][0] = corrupted_faces[i * number_of_vertex_indices_per_triangle];
+			initial_mesh_triangles[i][1] = corrupted_faces[(i * number_of_vertex_indices_per_triangle)+1];
+			initial_mesh_triangles[i][2] = corrupted_faces[(i * number_of_vertex_indices_per_triangle)+2];
+		}
+	
+		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_triangles);
+	
+		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
+		
+		std::cerr << "          ========== unit test combinatorics faces starting from 0 instead of one ======" << std::endl ;
+		
+		// faces starting from 0 instead of one - the face list is taken from blender, which starts with 1 as the first vertice - openvdb does with zero!
+		// i'm not able to catch this one 
+		// but the console output tells the whole story 
+		
+		         //========== unit test combinatorics faces starting from 0 instead of one ======
+		         //		Segmentation fault (core dumped)
+		         
+		// that is the reason why the function is commented out below
+		/*
+		int faces_starting_from_zero[number_of_triangles*number_of_vertex_indices_per_triangle] = {1,2,3,7,6,5,4,5,1,5,6,2,2,6,7,0,3,7,0,1,3,4,7,5,0,4,1,1,5,2,3,2,7,4,0,7}; 
+		for (int i=0;i<number_of_triangles;i++)
+		{
+			initial_mesh_triangles[i][0] = faces_starting_from_zero[i * number_of_vertex_indices_per_triangle];
+			initial_mesh_triangles[i][1] = faces_starting_from_zero[(i * number_of_vertex_indices_per_triangle)+1];
+			initial_mesh_triangles[i][2] = faces_starting_from_zero[(i * number_of_vertex_indices_per_triangle)+2];
+		}
+
+		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_triangles);
+		
+		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
+		*/
+		
 	}
 	
 	
