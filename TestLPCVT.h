@@ -42,8 +42,11 @@ public:
 
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test7 - Test Algebra",
 				&TestMesh::testMesh_TestAlgebra ));
+				
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test8 - Test Algebra with different seeds",
+				&TestMesh::testMesh_TestAlgebraWithDifferentSeeds ));
 			
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test8 - Test Combinatorics with reference arguments",
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test9 - Test Combinatorics with reference arguments",
 				&TestMesh::testMesh_TestCombinatoricsByReference ));
 
 		return suiteOfTests;
@@ -185,7 +188,7 @@ protected:
 		
 		std::cerr << "          ========== unit test combinatorics ======" << std::endl ;
 		int number_of_rdttris = 0;
-		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_triangles);
+		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles);
 
 		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
 		
@@ -205,7 +208,7 @@ protected:
 			initial_mesh_triangles[i][2] = corrupted_faces[(i * number_of_vertex_indices_per_triangle)+2];
 		}
 	
-		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_triangles);
+		number_of_rdttris = Geex::getCombinatorialStructureOfFLp(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles);
 	
 		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
 		
@@ -258,16 +261,166 @@ protected:
 		}
 		
 		
+		// initialize a new vector which holds the new vertices of the delaunay triangulation
+		std::vector<std::vector<float> > rdt_vertices_combinatorial;
+		std::vector<std::vector<float> > rdt_triangles_combinatorial;
+
+		std::vector<std::vector<float> > rdt_vertices_algebraic;
+		std::vector<std::vector<float> > rdt_triangles_algebraic;
+
+		// get the combinatorial rvd for assert comparison
+		Geex::getCombinatorialStructureOfFLpByReference(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_combinatorial, 				rdt_triangles_combinatorial);
+
 		std::cerr << "          ========== unit test combinatorics ======" << std::endl ;
-		float FL_p = Geex::test_algebra(initial_mesh_vertices, initial_mesh_triangles);
+		float FL_p = Geex::test_algebra(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_algebraic, rdt_triangles_algebraic);
 		float assert_f = 12;
 		CPPUNIT_ASSERT_EQUAL(assert_f, FL_p);
+
+		// compare the combinatorial mesh with the minimized FLp algebraic one
+		// check the triangles amount
+		std::cerr << rdt_triangles_algebraic.size() << std::endl ;
+		CPPUNIT_ASSERT(rdt_triangles_combinatorial.size() == rdt_triangles_algebraic.size());
+
+		// check the vertice amount
+		std::cerr << rdt_vertices_algebraic.size() << std::endl ;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(rdt_vertices_combinatorial.size(), rdt_vertices_algebraic.size(), 0.01);
+
+		// check the connections
+		for (int i=0;i<rdt_triangles_combinatorial.size();i++)
+		{
+		    for (int j=0;j<3;j++)
+		    {
+		    	std::cerr <<  rdt_triangles_algebraic[i][j] << std::endl ;
+			CPPUNIT_ASSERT_EQUAL(rdt_triangles_combinatorial[i][j], rdt_triangles_algebraic[i][j]);
+		    }
+		} 
+		// check the vertex sizes
+		for (int i=0;i<rdt_triangles_combinatorial.size();i++)
+		{
+		    for (int j=0;j<3;j++)
+		    {	
+			    for (int k=0;k<3;k++)
+			    {	
+			    	// -1 because triangle indices start at one -> segfault with indexing
+				CPPUNIT_ASSERT_EQUAL(rdt_vertices_combinatorial[rdt_triangles_combinatorial[i][j]-1][k], 
+					rdt_vertices_algebraic[rdt_triangles_algebraic[i][j]-1][k]);
+			    }
+		    }
+		} 
 		
+	}
+	
+	void testMesh_TestAlgebraWithDifferentSeeds()
+	
+	{
+		// cube mesh
+		// setup points
+		int number_of_seeds = 8;
+		int number_of_vertices = 8;
+		int xyzs = 3;
+		
+		std::vector<std::vector<float> > initial_mesh_vertices(number_of_vertices, std::vector<float>(xyzs));
+		// fill the points vector as in test_mesh_vertices.obj
+		initial_mesh_vertices = Geex::initializeCubeVertices();
+		
+		// here seperate seeds are created that are different from the meshs vertices!
+		std::vector<std::vector<float> > seeds(number_of_seeds, std::vector<float>(xyzs));
+
+		seeds[0][0] = 0.5;
+		seeds[0][1] = 0;
+		seeds[0][2] = 0;
+
+		seeds[1][0] = 0.5;
+		seeds[1][1] = 0;
+		seeds[1][2] = 0.5;
+
+		seeds[2][0] = 0;
+		seeds[2][1] = 0;
+		seeds[2][2] = 0.5;
+
+		seeds[3][0] = 0;
+		seeds[3][1] = 0;
+		seeds[3][2] = 0;
+
+		seeds[4][0] = 0.5;
+		seeds[4][1] = 0.5;
+		seeds[4][2] = 0;
+
+		seeds[5][0] = 1;
+		seeds[5][1] = 1;
+		seeds[5][2] = 1;
+
+		seeds[6][0] = 0.5;
+		seeds[6][1] = 0.5;
+		seeds[6][2] = 0.5;
+
+		seeds[7][0] = 0.5;
+		seeds[7][1] = 0.5;
+		seeds[7][2] = 0.5;
+		
+		// setup triangles
+		int number_of_triangles = 12;
+		int number_of_vertex_indices_per_triangle = 3;
+		int faces[number_of_triangles*number_of_vertex_indices_per_triangle] = {2,3,4,8,7,6,5,6,2,6,7,3,3,7,8,1,4,8,1,2,4,5,8,6,1,5,2,2,6,3,4,3,8,5,1,8}; 
+		std::vector<std::vector<float> > initial_mesh_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
+		for (int i=0;i<number_of_triangles;i++)
+		{
+			initial_mesh_triangles[i][0] = faces[i * number_of_vertex_indices_per_triangle];
+			initial_mesh_triangles[i][1] = faces[(i * number_of_vertex_indices_per_triangle)+1];
+			initial_mesh_triangles[i][2] = faces[(i * number_of_vertex_indices_per_triangle)+2];
+		}
+		
+		
+		// initialize a new vector which holds the new vertices of the delaunay triangulation
+		std::vector<std::vector<float> > rdt_vertices_combinatorial;
+		std::vector<std::vector<float> > rdt_triangles_combinatorial;
+
+		std::vector<std::vector<float> > rdt_vertices_algebraic;
+		std::vector<std::vector<float> > rdt_triangles_algebraic;
+
+		// get the combinatorial rvd for assert comparison
+		Geex::getCombinatorialStructureOfFLpByReference(seeds, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_combinatorial, rdt_triangles_combinatorial);
+
+		std::cerr << "          ========== unit test algebra ======" << std::endl ;
+		float FL_p = Geex::test_algebra(seeds, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_algebraic, rdt_triangles_algebraic);
+		float assert_f = 16.71875;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_f, FL_p, 0.01);
+
+		// compare the combinatorial mesh with the minimized FLp algebraic one
+		// check the triangles amount
+		std::cerr << rdt_triangles_algebraic.size() << std::endl ;
+		CPPUNIT_ASSERT(rdt_triangles_combinatorial.size() == rdt_triangles_algebraic.size());
+
+		// check the vertice amount
+		std::cerr << rdt_vertices_algebraic.size() << std::endl ;
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(rdt_vertices_combinatorial.size(), rdt_vertices_algebraic.size(), 0.01);
+
+		// check the connections
+		for (int i=0;i<rdt_triangles_combinatorial.size();i++)
+		{
+		    for (int j=0;j<3;j++)
+		    {
+		    	std::cerr <<  rdt_triangles_algebraic[i][j] << std::endl ;
+			CPPUNIT_ASSERT_EQUAL(rdt_triangles_combinatorial[i][j], rdt_triangles_algebraic[i][j]);
+		    }
+		} 
+		// check the vertex sizes
+		for (int i=0;i<rdt_triangles_combinatorial.size();i++)
+		{
+		    for (int j=0;j<3;j++)
+		    {	
+			    for (int k=0;k<3;k++)
+			    {	
+			    	// -1 because triangle indices start at one -> segfault with indexing
+				CPPUNIT_ASSERT_EQUAL(rdt_vertices_combinatorial[rdt_triangles_combinatorial[i][j]-1][k], 
+					rdt_vertices_algebraic[rdt_triangles_algebraic[i][j]-1][k]);
+			    }
+		    }
+		} 
 	}
 	
 	void testMesh_TestCombinatoricsByReference()
 	{
-	
 		// cube mesh
 		// setup points
 		int number_of_vertices = 8;
@@ -294,7 +447,7 @@ protected:
 
 		std::vector<std::vector<float> > rdt_triangles;
 		
-		Geex::getCombinatorialStructureOfFLpByReference(initial_mesh_vertices, initial_mesh_triangles, rdt_vertices, rdt_triangles);
+		Geex::getCombinatorialStructureOfFLpByReference(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices, rdt_triangles);
 
 		int number_of_rdttris = rdt_triangles.size();
 		CPPUNIT_ASSERT_EQUAL(7, number_of_rdttris);
@@ -314,7 +467,7 @@ protected:
 				verts_counter += 1;
 			}
 		}
-
+	
 		int rdt_faces[number_of_rdttris*number_of_vertex_indices_per_triangle] = {3,7,4,1,4,5,1,2,4,1,5,2,2,5,6,5,8,6,2,6,3}; 
 		int faces_counter = 0;
 		

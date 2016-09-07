@@ -16,14 +16,14 @@
 
 namespace Geex {
 
-	void create_pts(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<vec3>& pts)
+	void create_pts(std::vector<std::vector<float> > seeds, std::vector<vec3>& pts)
 	{
 		pts.clear() ;
-		for (int i=0; i<initial_mesh_vertices.size(); i++)
+		for (int i=0; i<seeds.size(); i++)
 		{
-			double x = (double) initial_mesh_vertices[i][0];
-			double y = (double) initial_mesh_vertices[i][1];
-			double z = (double) initial_mesh_vertices[i][2];
+			double x = (double) seeds[i][0];
+			double y = (double) seeds[i][1];
+			double z = (double) seeds[i][2];
 			vec3 p;
 			p[0] = x;
 			p[1] = y;
@@ -72,13 +72,13 @@ namespace Geex {
 		
 	}
 	    
-	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
+	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
 
 	{
 		Mesh M ;
 		unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
 		std::vector<vec3> pts ;
-		create_pts(initial_mesh_vertices, pts);
+		create_pts(seeds, pts);
 		Delaunay* delaunay = Delaunay::create("CGAL") ;
 		RestrictedVoronoiDiagram RVD(delaunay, &M) ;
 
@@ -102,13 +102,13 @@ namespace Geex {
 	}
 	
 	
-	void getCombinatorialStructureOfFLpByReference(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles, 
-	std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles)
+	void getCombinatorialStructureOfFLpByReference(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+		std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles)
 	{
 		Mesh M ;
 		unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
 		std::vector<vec3> pts ;
-		create_pts(initial_mesh_vertices, pts);
+		create_pts(seeds, pts);
 		Delaunay* delaunay = Delaunay::create("CGAL") ;
 		RestrictedVoronoiDiagram RVD(delaunay, &M) ;
 
@@ -156,7 +156,7 @@ namespace Geex {
         delete delaunay ;
     }
     
-     //Computes F_{L_p} and its gradient.
+    //Computes F_{L_p} and its gradient.
     float compute_F_g(Mesh* m, const std::vector<vec3>& pts, unsigned int p, bool volume) {
         std::cerr << "nb pts = " << pts.size() << "   nb facets = " << m->nb_facets() << std::endl ;
         std::vector<int> I ;
@@ -191,16 +191,40 @@ namespace Geex {
         return f;
     }
 
-    float test_algebra(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) {
-        Mesh M ;
-        unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
-        std::vector<vec3> pts ;
-        create_pts(initial_mesh_vertices, pts);
-        std::cerr << "          ========== unit test algebraic surface LpCVT test ======" << std::endl ;
-        int p_norm = 2;
-        float FL_p = compute_F_g(&M, pts, p_norm, false) ;
+    float test_algebra(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+    	std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles) {
+	Mesh M ;
+	unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
+	std::vector<vec3> pts ;
+	create_pts(seeds, pts);
+	std::cerr << "          ========== unit test algebraic surface LpCVT test ======" << std::endl ;
+	// p has to be even!
+	//Assertion `(p/2)*2 == p' failed
+	int p_norm = 2;
+	float FL_p = compute_F_g(&M, pts, p_norm, false) ;
+
+	Delaunay* delaunay = Delaunay::create("CGAL") ;
+	RestrictedVoronoiDiagram RVD(delaunay, &M) ;
+
+	delaunay->set_vertices(pts) ;
+
+	// this is only valid for vertices as they are referenced in writeRDT by index
+	// the triangles are passed to RCD.each_primal_triangle which only takes an
+	// initialized but not presized vector
+	//resize the referenced vectors as the actual sizes are not know until here
+	int number_of_rdt_vertices = RVD.delaunay()->nb_vertices();
+	int xyzs = 3;
+	rdt_vertices.resize(number_of_rdt_vertices);
+	for (int i = 0; i < number_of_rdt_vertices; ++i)
+	{
+		rdt_vertices[i].resize(xyzs);
+	}
+
+	write_RDTByReference(RVD, rdt_vertices, rdt_triangles) ;
+
         return FL_p;
     }
+
     
 std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
 {

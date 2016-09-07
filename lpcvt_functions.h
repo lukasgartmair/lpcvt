@@ -13,12 +13,13 @@
 
 
 namespace Geex {
-	void create_pts(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<vec3>& pts);
+	void create_pts(std::vector<std::vector<float> > seeds, std::vector<vec3>& pts);
 
-	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles);
+	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+		std::vector<std::vector<float> > initial_mesh_triangles); 
 	
-	void getCombinatorialStructureOfFLpByReference(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles, 
-	std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles);
+	void getCombinatorialStructureOfFLpByReference(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+		std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles);
 	
 	void write_RDT(RestrictedVoronoiDiagram& RVD, std::vector<std::vector<float> > cvt_vertices, std::vector<std::vector<float> > cvt_triangles);
 	
@@ -29,7 +30,8 @@ namespace Geex {
 
 	std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin=0, float zmin=0);
 
-	float test_algebra(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles);
+   	float test_algebra(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+   		std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles);
 	
 	float compute_F_g(Mesh* m, const std::vector<vec3>& pts, unsigned int p, bool volume);
 	
