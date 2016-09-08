@@ -30,12 +30,14 @@ namespace Geex {
 
 	std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin=0, float zmin=0);
 
-   	float test_algebra(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+   	float getAlgebraicStructureOfFLpByReference(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
    		std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles);
 	
 	float compute_F_g(Mesh* m, const std::vector<vec3>& pts, unsigned int p, bool volume);
 	
 	void get_combinatorics(Mesh* M, const std::vector<vec3>& pts, std::vector<int>& I, std::vector<vec3>& C, std::vector<int>& F, bool volume);
+	
+	std::vector<std::vector<float> > generateSeedsLyingOnTriangleSurfaces(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > 			initial_mesh_triangles);
 	
 
     class WritePrimalTriangle{

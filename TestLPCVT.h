@@ -48,6 +48,9 @@ public:
 			
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test9 - Test Combinatorics with reference arguments",
 				&TestMesh::testMesh_TestCombinatoricsByReference ));
+				
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestMesh>("Test10 - Test Generate Seeds that lie on triangle surfaces ",
+				&TestMesh::testMesh_TestGenerateSeeds ));
 
 		return suiteOfTests;
 	}
@@ -272,7 +275,7 @@ protected:
 		Geex::getCombinatorialStructureOfFLpByReference(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_combinatorial, 				rdt_triangles_combinatorial);
 
 		std::cerr << "          ========== unit test combinatorics ======" << std::endl ;
-		float FL_p = Geex::test_algebra(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_algebraic, rdt_triangles_algebraic);
+		float FL_p = Geex::getAlgebraicStructureOfFLpByReference(initial_mesh_vertices, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_algebraic, 				rdt_triangles_algebraic);
 		float assert_f = 12;
 		CPPUNIT_ASSERT_EQUAL(assert_f, FL_p);
 
@@ -378,11 +381,11 @@ protected:
 		std::vector<std::vector<float> > rdt_vertices_algebraic;
 		std::vector<std::vector<float> > rdt_triangles_algebraic;
 
-		// get the combinatorial rvd for assert comparison
+		// get the combinatorial rdt for assert comparison
 		Geex::getCombinatorialStructureOfFLpByReference(seeds, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_combinatorial, rdt_triangles_combinatorial);
 
-		std::cerr << "          ========== unit test algebra ======" << std::endl ;
-		float FL_p = Geex::test_algebra(seeds, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_algebraic, rdt_triangles_algebraic);
+		std::cerr << "          ========== unit test algebra 1 ======" << std::endl ;
+		float FL_p = Geex::getAlgebraicStructureOfFLpByReference(seeds, initial_mesh_vertices, initial_mesh_triangles, rdt_vertices_algebraic, rdt_triangles_algebraic);
 		float assert_f = 16.71875;
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_f, FL_p, 0.01);
 
@@ -479,8 +482,52 @@ protected:
 				faces_counter += 1;
 			}
 		}
+	}
+	
+	void testMesh_TestGenerateSeeds()
+	{
+
+		// cube mesh
+		// setup points
+		int number_of_vertices = 8;
+		int xyzs = 3;
+		std::vector<std::vector<float> > initial_mesh_vertices(number_of_vertices, std::vector<float>(xyzs));
+		// fill the points vector as in test_mesh_vertices.obj
+		initial_mesh_vertices = Geex::initializeCubeVertices();
+	
+		// setup triangles
+		int number_of_triangles = 12;
+		int number_of_vertex_indices_per_triangle = 3;
+		int faces[number_of_triangles*number_of_vertex_indices_per_triangle] = {2,3,4,8,7,6,5,6,2,6,7,3,3,7,8,1,4,8,1,2,4,5,8,6,1,5,2,2,6,3,4,3,8,5,1,8}; 
+		std::vector<std::vector<float> > initial_mesh_triangles(number_of_triangles, std::vector<float>(number_of_vertex_indices_per_triangle));
+		for (int i=0;i<number_of_triangles;i++)
+		{
+			// minus one because of indexing
+			initial_mesh_triangles[i][0] = faces[i * number_of_vertex_indices_per_triangle]-1;
+			initial_mesh_triangles[i][1] = faces[(i * number_of_vertex_indices_per_triangle)+1]-1;
+			initial_mesh_triangles[i][2] = faces[(i * number_of_vertex_indices_per_triangle)+2]-1;
+		}
+		
+		std::vector<std::vector<float> > seeds;
+		seeds = Geex::generateSeedsLyingOnTriangleSurfaces(initial_mesh_vertices, initial_mesh_triangles);
+		
+		std::cerr << seeds[0][0] << std::endl ;
+		std::cerr << seeds[0][1] << std::endl ;
+		std::cerr << seeds[0][2] << std::endl ;
+		
+		std::cerr << seeds[1][0] << std::endl ;
+		std::cerr << seeds[1][1] << std::endl ;
+		std::cerr << seeds[1][2] << std::endl ;
+		
+		
+		
+		// check amount
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(2, seeds.size(), 0.01);
+	
 	
 	}
+	
+	
 	
 	
 	

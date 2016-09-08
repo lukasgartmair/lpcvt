@@ -8,6 +8,14 @@
 #include "combinatorics/exact/RVD_predicates.h"
 #include "algebra/F_Lp.h"
 #include "lpcvt_functions.h"
+
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random.hpp>
+#include <time.h>
+
+#include <math.h>       /* floor */
+        
         
 // // create shared library of this with sudo g++ -std=c++11 -fPIC -shared lpcvt_functions.cpp -o /usr/lib/libLpCVT_functions.so
 
@@ -72,7 +80,7 @@ namespace Geex {
 		
 	}
 	    
-	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > initial_mesh_triangles) 
+	int getCombinatorialStructureOfFLp(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > 			initial_mesh_triangles) 
 
 	{
 		Mesh M ;
@@ -191,80 +199,125 @@ namespace Geex {
         return f;
     }
 
-    float test_algebra(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
-    	std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles) {
-	Mesh M ;
-	unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
-	std::vector<vec3> pts ;
-	create_pts(seeds, pts);
-	std::cerr << "          ========== unit test algebraic surface LpCVT test ======" << std::endl ;
-	// p has to be even!
-	//Assertion `(p/2)*2 == p' failed
-	int p_norm = 2;
-	float FL_p = compute_F_g(&M, pts, p_norm, false) ;
+	float getAlgebraicStructureOfFLpByReference(std::vector<std::vector<float> > seeds, std::vector<std::vector<float> > initial_mesh_vertices, 
+		std::vector<std::vector<float> > initial_mesh_triangles, std::vector<std::vector<float> > &rdt_vertices, std::vector<std::vector<float> > &rdt_triangles) {
 
-	Delaunay* delaunay = Delaunay::create("CGAL") ;
-	RestrictedVoronoiDiagram RVD(delaunay, &M) ;
+		Mesh M ;
+		unsigned int nb_borders = M.receiveVerticesAndTriangles(initial_mesh_vertices, initial_mesh_triangles);
+		std::vector<vec3> pts ;
+		create_pts(seeds, pts);
+		std::cerr << "          ========== unit test algebraic surface LpCVT test ======" << std::endl ;
+		// p has to be even!
+		//Assertion `(p/2)*2 == p' failed
+		int p_norm = 2;
+		float FL_p = compute_F_g(&M, pts, p_norm, false) ;
 
-	delaunay->set_vertices(pts) ;
+		Delaunay* delaunay = Delaunay::create("CGAL") ;
+		RestrictedVoronoiDiagram RVD(delaunay, &M) ;
 
-	// this is only valid for vertices as they are referenced in writeRDT by index
-	// the triangles are passed to RCD.each_primal_triangle which only takes an
-	// initialized but not presized vector
-	//resize the referenced vectors as the actual sizes are not know until here
-	int number_of_rdt_vertices = RVD.delaunay()->nb_vertices();
-	int xyzs = 3;
-	rdt_vertices.resize(number_of_rdt_vertices);
-	for (int i = 0; i < number_of_rdt_vertices; ++i)
-	{
-		rdt_vertices[i].resize(xyzs);
+		delaunay->set_vertices(pts) ;
+
+		// this is only valid for vertices as they are referenced in writeRDT by index
+		// the triangles are passed to RCD.each_primal_triangle which only takes an
+		// initialized but not presized vector
+		//resize the referenced vectors as the actual sizes are not know until here
+		int number_of_rdt_vertices = RVD.delaunay()->nb_vertices();
+		int xyzs = 3;
+		rdt_vertices.resize(number_of_rdt_vertices);
+		for (int i = 0; i < number_of_rdt_vertices; ++i)
+		{
+			rdt_vertices[i].resize(xyzs);
+		}
+
+		write_RDTByReference(RVD, rdt_vertices, rdt_triangles) ;
+
+		return FL_p;
 	}
 
-	write_RDTByReference(RVD, rdt_vertices, rdt_triangles) ;
-
-        return FL_p;
-    }
+	
+	std::vector<std::vector<float> > generateSeedsLyingOnTriangleSurfaces(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > 			initial_mesh_triangles)
+	{
+		// naive implementation of seed generation!
+		// paper isotropic remeshing yan et al,09
+		// how much seeds do i need
+		// using boost random because c++11 compiler does not work for unknown reasons
+		const int number_of_seeds = floor(initial_mesh_vertices.size() / 3);
+		const int xyzs = 3;
+		
+		std::vector<std::vector<float> > seeds(number_of_seeds, std::vector<float>(xyzs));
+		const int min_triangle_index = 0;
+		std::vector<float> rnd_seed_from_triangle_surface(xyzs);
+		
+		// http://stackoverflow.com/questions/4329284/c-boost-random-numeric-generation-problem
+		static boost::mt19937 generator(static_cast<unsigned int>(time(0)));
+		// warning closed range
+		//Given the parameters 1 and 6, uniform_int_distribution can can produce any of the values 1, 2, 3, 4, 5, or 6. 
+		boost::random::uniform_int_distribution<> int_dist(min_triangle_index, initial_mesh_triangles.size()-1);
+		boost::uniform_01<boost::random::mt19937> real_dist(generator);
+		
+		for (int i=0;i<number_of_seeds;i++)
+		{
+			// randomly choose triangle index
+			int rnd_triangle_index = int_dist(generator);
+			
+			double a = real_dist();
+			double b = real_dist();
+			
+			// define vertices of the chosen triangle
+			std::vector<float> current_triangle = initial_mesh_triangles[rnd_triangle_index];
+			
+			for (int j=0;j<xyzs;j++)
+			{
+				//http://math.stackexchange.com/questions/538458/triangle-point-picking-in-3d
+				seeds[i][j] = initial_mesh_vertices[current_triangle[0]][j] + 
+				a*(initial_mesh_vertices[current_triangle[1]][j] - initial_mesh_vertices[current_triangle[0]][j]) +
+				b*(initial_mesh_vertices[current_triangle[2]][j] - initial_mesh_vertices[current_triangle[0]][j]);
+			}
+		}
+		return seeds;
+	}
+	
 
     
-std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
-{
-	int number_of_vertices = 8;
-	int xyz = 3;
-	std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyz));
+	std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
+	{
+		int number_of_vertices = 8;
+		int xyz = 3;
+		std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyz));
 
-	vertices[0][0] = xmin+1;
-	vertices[0][1] = ymin;
-	vertices[0][2] = zmin;
+		vertices[0][0] = xmin+1;
+		vertices[0][1] = ymin;
+		vertices[0][2] = zmin;
 
-	vertices[1][0] = xmin+1;
-	vertices[1][1] = ymin;
-	vertices[1][2] = zmin+1;
+		vertices[1][0] = xmin+1;
+		vertices[1][1] = ymin;
+		vertices[1][2] = zmin+1;
 
-	vertices[2][0] = xmin;
-	vertices[2][1] = ymin;
-	vertices[2][2] = zmin+1;
+		vertices[2][0] = xmin;
+		vertices[2][1] = ymin;
+		vertices[2][2] = zmin+1;
 
-	vertices[3][0] = xmin;
-	vertices[3][1] = ymin;
-	vertices[3][2] = zmin;
+		vertices[3][0] = xmin;
+		vertices[3][1] = ymin;
+		vertices[3][2] = zmin;
 
-	vertices[4][0] = xmin+1;
-	vertices[4][1] = ymin+1;
-	vertices[4][2] = zmin;
+		vertices[4][0] = xmin+1;
+		vertices[4][1] = ymin+1;
+		vertices[4][2] = zmin;
 
-	vertices[5][0] = xmin+1;
-	vertices[5][1] = ymin+1;
-	vertices[5][2] = zmin+1;
+		vertices[5][0] = xmin+1;
+		vertices[5][1] = ymin+1;
+		vertices[5][2] = zmin+1;
 
-	vertices[6][0] = xmin;
-	vertices[6][1] = ymin+1;
-	vertices[6][2] = zmin+1;
+		vertices[6][0] = xmin;
+		vertices[6][1] = ymin+1;
+		vertices[6][2] = zmin+1;
 
-	vertices[7][0] = xmin;
-	vertices[7][1] = ymin+1;
-	vertices[7][2] = zmin;
+		vertices[7][0] = xmin;
+		vertices[7][1] = ymin+1;
+		vertices[7][2] = zmin;
 	
-	return vertices;
-}
+		return vertices;
+	}
 
 }
