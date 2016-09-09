@@ -522,7 +522,7 @@ protected:
 		
 		
 		// check amount
-		CPPUNIT_ASSERT_DOUBLES_EQUAL(2, seeds.size(), 0.01);
+		CPPUNIT_ASSERT_DOUBLES_EQUAL(20, seeds.size(), 0.01);
 	
 	
 	}

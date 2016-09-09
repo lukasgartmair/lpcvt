@@ -241,7 +241,9 @@ namespace Geex {
 		// paper isotropic remeshing yan et al,09
 		// how much seeds do i need
 		// using boost random because c++11 compiler does not work for unknown reasons
-		const int number_of_seeds = floor(initial_mesh_vertices.size() / 3);
+		// in the test file three_holes.pty/obj the seed/initial_verts ratio is about 2.5
+		const float seed_initial_verts_ratio = 2.5;
+		const int number_of_seeds = floor(initial_mesh_vertices.size()*seed_initial_verts_ratio);
 		const int xyzs = 3;
 		
 		std::vector<std::vector<float> > seeds(number_of_seeds, std::vector<float>(xyzs));
