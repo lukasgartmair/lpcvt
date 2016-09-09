@@ -39,6 +39,10 @@ namespace Geex {
 	
 	std::vector<std::vector<float> > generateSeedsLyingOnTriangleSurfaces(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > 			initial_mesh_triangles);
 	
+	double calculateHeron(double a, double b, double c);
+	double calculateDistance3d(double x1, double y1, double z1, double x2, double y2, double z2);
+	double calculateTriangleArea(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<float> triangle);
+	
 
     class WritePrimalTriangle{
     public:

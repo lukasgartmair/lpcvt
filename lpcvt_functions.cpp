@@ -13,7 +13,7 @@
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/random.hpp>
 #include <time.h>
-
+#include <numeric>
 #include <math.h>       /* floor */
         
         
@@ -233,6 +233,43 @@ namespace Geex {
 
 		return FL_p;
 	}
+	
+	//http://math.stackexchange.com/questions/128991/how-to-calculate-area-of-3d-triangle
+	
+	double calculateHeron(double a, double b, double c)
+	{
+	    double s = (a + b + c) / 2; 
+	    double area = pow((s*(s-a) * (s-b)*(s-c)), 0.5);       
+	    return area;
+	}
+
+	double calculateDistance3d(double x1, double y1, double z1, double x2, double y2, double z2)
+	{
+	    double a = pow((x1-x2),2.0)+pow((y1-y2),2.0) + pow((z1-z2),2.0);
+	    double d = pow(a,0.5);  
+	    return d;
+	}
+	
+	double calculateTriangleArea(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<float> triangle)
+	{				
+
+		double x1 = initial_mesh_vertices[triangle[0]][0];
+		double x2 = initial_mesh_vertices[triangle[0]][1];
+		double x3 = initial_mesh_vertices[triangle[0]][2];
+		double y1 = initial_mesh_vertices[triangle[1]][0];
+		double y2 = initial_mesh_vertices[triangle[1]][1];
+		double y3 = initial_mesh_vertices[triangle[1]][2];
+		double z1 = initial_mesh_vertices[triangle[2]][0];
+		double z2 = initial_mesh_vertices[triangle[2]][1];
+		double z3 = initial_mesh_vertices[triangle[2]][2];
+		
+		double a = calculateDistance3d(x1,y1,z1,x2,y2,z2);
+		double b = calculateDistance3d(x2,y2,z2,x3,y3,z3); 
+		double c = calculateDistance3d(x3,y3,z3,x1,y1,z1); 
+		double area = calculateHeron(a,b,c);
+		
+		return area;
+	}
 
 	
 	std::vector<std::vector<float> > generateSeedsLyingOnTriangleSurfaces(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > 			initial_mesh_triangles)
@@ -250,20 +287,52 @@ namespace Geex {
 		const int min_triangle_index = 0;
 		std::vector<float> rnd_seed_from_triangle_surface(xyzs);
 		
+		// calculate the triangle areas (calculate the sum of all the weights)
+		std::vector<float> triangle_areas;
+		for (int i=0;i<initial_mesh_triangles.size();i++)
+		{
+			double triangle_area = calculateTriangleArea(initial_mesh_vertices, initial_mesh_triangles[i]);
+			triangle_areas.push_back(triangle_area);
+		}
+		
+		double total_surface_area = std::accumulate(triangle_areas.begin(), triangle_areas.end(), 0.0);
+		
+		// http://stackoverflow.com/questions/9294316/distribute-points-on-mesh-according-to-density
+
 		// http://stackoverflow.com/questions/4329284/c-boost-random-numeric-generation-problem
+		// http://www.bnikolic.co.uk/blog/cpp-boost-uniform01.html
 		static boost::mt19937 generator(static_cast<unsigned int>(time(0)));
 		// warning closed range
 		//Given the parameters 1 and 6, uniform_int_distribution can can produce any of the values 1, 2, 3, 4, 5, or 6. 
 		boost::random::uniform_int_distribution<> int_dist(min_triangle_index, initial_mesh_triangles.size()-1);
-		boost::uniform_01<boost::random::mt19937> real_dist(generator);
+		boost::uniform_real<> real_dist(0.0, total_surface_area-0.01);
+		boost::uniform_01<boost::random::mt19937> real_dist01(generator);
 		
 		for (int i=0;i<number_of_seeds;i++)
 		{
+			// http://stackoverflow.com/questions/1761626/weighted-random-numbers
+			// pick a random number that is 0 or greater and is less than the sum of the weights
+			float rnd_real_number = real_dist(generator);
+			
+			//go through the items one at a time, subtracting their weight from your random number,
+			// until you get the item where the random number is less than that item's weight
+			int rnd_triangle_index = 0;
+			for(int k=0; k<initial_mesh_triangles.size(); k++) 
+			{
+				if(rnd_real_number < triangle_areas[k])
+				{
+					rnd_triangle_index = k;
+				}
+				rnd_real_number -= triangle_areas[k];
+			}
+			
+			/*
 			// randomly choose triangle index
 			int rnd_triangle_index = int_dist(generator);
+			*/
 			
-			double a = real_dist();
-			double b = real_dist();
+			double a = real_dist01();
+			double b = real_dist01();
 			
 			// define vertices of the chosen triangle
 			std::vector<float> current_triangle = initial_mesh_triangles[rnd_triangle_index];
