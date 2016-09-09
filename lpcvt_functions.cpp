@@ -271,6 +271,35 @@ namespace Geex {
 		return area;
 	}
 
+	double generateWeightedRandomTriangleIndex(double total_surface_area, std::vector<float> triangle_areas, std::vector<std::vector<float> > initial_mesh_triangles)
+	{
+	
+		static boost::mt19937 generator(static_cast<unsigned int>(time(0)));
+		boost::uniform_real<> real_dist(0.0, total_surface_area-0.01);
+	
+		// http://stackoverflow.com/questions/1761626/weighted-random-numbers
+		// pick a random number that is 0 or greater and is less than the sum of the weights
+		float rnd_real_number = real_dist(generator);
+		
+		//go through the items one at a time, subtracting their weight from your random number,
+		// until you get the item where the random number is less than that item's weight
+		int rnd_triangle_index = 0;
+		
+		for(int k=0; k<initial_mesh_triangles.size(); k++) 
+		{
+			if(rnd_real_number < triangle_areas[k])
+			{
+				rnd_triangle_index = k;
+				break;
+			}
+			else
+			{
+				rnd_real_number -= triangle_areas[k];
+			}
+		}
+		return rnd_triangle_index;
+	}
+
 	
 	std::vector<std::vector<float> > generateSeedsLyingOnTriangleSurfaces(std::vector<std::vector<float> > initial_mesh_vertices, std::vector<std::vector<float> > 			initial_mesh_triangles)
 	{
@@ -305,26 +334,16 @@ namespace Geex {
 		// warning closed range
 		//Given the parameters 1 and 6, uniform_int_distribution can can produce any of the values 1, 2, 3, 4, 5, or 6. 
 		boost::random::uniform_int_distribution<> int_dist(min_triangle_index, initial_mesh_triangles.size()-1);
-		boost::uniform_real<> real_dist(0.0, total_surface_area-0.01);
 		boost::uniform_01<boost::random::mt19937> real_dist01(generator);
 		
 		for (int i=0;i<number_of_seeds;i++)
 		{
-			// http://stackoverflow.com/questions/1761626/weighted-random-numbers
-			// pick a random number that is 0 or greater and is less than the sum of the weights
-			float rnd_real_number = real_dist(generator);
 			
-			//go through the items one at a time, subtracting their weight from your random number,
-			// until you get the item where the random number is less than that item's weight
-			int rnd_triangle_index = 0;
-			for(int k=0; k<initial_mesh_triangles.size(); k++) 
-			{
-				if(rnd_real_number < triangle_areas[k])
-				{
-					rnd_triangle_index = k;
-				}
-				rnd_real_number -= triangle_areas[k];
-			}
+			
+			
+			double rnd_triangle_index = generateWeightedRandomTriangleIndex(total_surface_area, triangle_areas, initial_mesh_triangles);
+			
+			std::cerr << " rnd triangle index  " << rnd_triangle_index <<  std::endl ;
 			
 			/*
 			// randomly choose triangle index

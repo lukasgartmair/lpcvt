@@ -519,10 +519,14 @@ protected:
 		std::cerr << seeds[1][1] << std::endl ;
 		std::cerr << seeds[1][2] << std::endl ;
 		
-		
+		std::cerr << seeds[2][0] << std::endl ;
+		std::cerr << seeds[2][1] << std::endl ;
+		std::cerr << seeds[2][2] << std::endl ;
 		
 		// check amount
 		CPPUNIT_ASSERT_DOUBLES_EQUAL(20, seeds.size(), 0.01);
+		
+		
 	
 	
 	}
